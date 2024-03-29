@@ -9,7 +9,7 @@ enum class GenderEnum {
 };
 
 struct Individual {
-	int ID = 0;
+	uint16_t ID = 0;
 	std::string Name = "No Name";
 	std::string DateOfBirth = "dd/mm/yyyy";
 	std::string DateOfDeath = "dd/mm/yyyy";

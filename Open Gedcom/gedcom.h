@@ -1,18 +1,21 @@
 #pragma once
 #include "pch.h"
 #include "Objects.h"
+#include "lexer.h"
 
 namespace gedcom {
-class GedcomObject
+class Gedcom
 {
 public:
-	GedcomObject();
-	~GedcomObject();
+	Gedcom();
+	~Gedcom();
 
-	inline std::vector<Individual>* getIndividuals() const { return _Individuals; }
+	static std::unique_ptr<std::vector<Individual>> readFile(const std::string& filePath);
 
 private:
-	std::vector<Individual>* _Individuals;
+	static std::ifstream getFile(const std::string& filePath);
+
+	Lexer m_lexer{};
 };
 }
 
