@@ -1,7 +1,7 @@
-#pragma once
+export module OpenGedcom:Settings;
 import std;
 
-namespace OpenGedcom {
+export namespace OpenGedcom {
 	struct RegistrySettings {
 
 	};

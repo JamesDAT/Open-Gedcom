@@ -15,21 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OpenGedcom.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="internal\Settings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="internal\Parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="internal\DataStructure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="OpenGedcom.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\DataStructure.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\Settings.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\Parser.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\Utilities\Debugging.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
