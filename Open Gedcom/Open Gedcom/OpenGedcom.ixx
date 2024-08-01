@@ -3,7 +3,7 @@ export module OpenGedcom;
 export import :DataStructure;
 export import :Settings;
 import :Parser;
-import Debugging;
+import :Debugging;
 import std;
 
 export namespace OpenGedcom {
@@ -70,6 +70,21 @@ export namespace OpenGedcom {
 			return view;
 		}
 
+		// returns entire individual view, non resizable
+		[[nodiscard]] IndividualRangeView GetIndividualRange() {
+			IndividualRangeView view{ m_Individuals->lower_bound(0), m_Individuals->upper_bound(static_cast<int>(m_Individuals->size())) };
+			return view;
+		}
+		
+		[[nodiscard]] inline std::map<GedID, Individual>* Data() {
+			Debugging::GenerateWarning("Usage of Registry.Data() is potentially unsafe. The registry data will be cleared when the registry goes out of scope.");
+			return m_Individuals.get();
+		}
+
+		static inline void ToggleDebugMessages(bool showMessages = Debugging::DisableOutput) {
+			Debugging::DisableOutput = !showMessages;
+		}
+
 		// public member
 	public:
 
@@ -79,5 +94,11 @@ export namespace OpenGedcom {
 		const RegistrySettings m_Settings;
 		Parser m_Parser;
 		std::unique_ptr<std::map<GedID, Individual>> m_Individuals;
+	};
+
+	export class StreamRegistry {
+	public:
+
+	private:
 	};
 }

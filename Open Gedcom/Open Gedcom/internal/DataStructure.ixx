@@ -1,5 +1,5 @@
 export module OpenGedcom:DataStructure;
-import Debugging;
+import :Debugging;
 import std;
 
 export namespace OpenGedcom {

@@ -30,5 +30,8 @@
     <ClCompile Include="internal\Utilities\Debugging.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="internal\Utilities\FileStream.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
