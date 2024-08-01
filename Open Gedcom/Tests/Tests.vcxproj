@@ -138,7 +138,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="UnitTest.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Open Gedcom\Open Gedcom.vcxproj">
