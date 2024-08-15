@@ -5,6 +5,7 @@ import std;
 export namespace OpenGedcom {
 	using GedID = std::uint32_t;
 
+	// using get functions is recommended for retrieving data, but data is public
 	struct Individual {
 		Individual() {}
 		Individual(GedID id) : ID(id) {}

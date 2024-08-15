@@ -20,5 +20,7 @@ int main() {
 		//std::println("Name: {}\nID: {}", indi.Name, id);
 	}
 
+	__debugbreak();
+
 	return 0;
 }

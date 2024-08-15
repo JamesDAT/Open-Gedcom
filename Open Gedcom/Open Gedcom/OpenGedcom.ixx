@@ -72,7 +72,7 @@ export namespace OpenGedcom {
 
 		// returns entire individual view, non resizable
 		[[nodiscard]] IndividualRangeView GetIndividualRange() {
-			IndividualRangeView view{ m_Individuals->lower_bound(0), m_Individuals->upper_bound(static_cast<int>(m_Individuals->size())) };
+			IndividualRangeView view{ m_Individuals->lower_bound(0), m_Individuals->upper_bound(static_cast<GedID>(m_Individuals->size())) };
 			return view;
 		}
 		
