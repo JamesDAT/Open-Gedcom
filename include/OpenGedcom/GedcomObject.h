@@ -1,8 +1,10 @@
-// Copyright (c) 2025 Your Name
+// Copyright (c) 2025 James Hayden
 // SPDX-License-Identifier: MIT
 
 #pragma once
+#include <cstdint>
 #include <string_view>
+
 
 namespace OpenGedcom {
 
@@ -15,9 +17,9 @@ namespace OpenGedcom {
     };
 
     // forward declares
-    class Document;
-    class IndividualView;
-    class FamilyView;
+    //class Document;
+    //class IndividualView;
+    //class FamilyView;
 
     // internal storage
     struct IndividualRecord {

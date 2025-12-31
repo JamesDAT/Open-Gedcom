@@ -15,6 +15,12 @@ target_sources(OpenGedcom
         ${PUBLIC_INCLUDE}/GedcomObject.h
     PRIVATE
         src/OpenGedcom.cpp
+        src/Tests.h
+
+        src/Utility/LineRingBuffer.h
+
+        src/Reader/GedcomReader.h
+        src/Reader/GedcomReader.cpp
 )
 
 target_include_directories(OpenGedcom
@@ -31,5 +37,6 @@ target_compile_features(OpenGedcom PUBLIC cxx_std_20)
 option(OPENGEDCOM_BUILD_TESTS "Build OpenGedcom tests" OFF)
 
 if (OPENGEDCOM_BUILD_TESTS)
+    target_compile_definitions(OpenGedcom PRIVATE OPENGEDCOM_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
