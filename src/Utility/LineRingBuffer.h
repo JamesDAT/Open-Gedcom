@@ -8,9 +8,10 @@
 #include <vector>
 
 namespace OpenGedcom {
+
     struct Line {
         std::string text;
-        uint64_t lineNo;
+        uint64_t lineNo = 0;
     };
 
     class LineRingBuffer {
@@ -39,4 +40,5 @@ namespace OpenGedcom {
         size_t write_pos_ = 0;
         size_t read_pos_  = 0;
     };
+
 }

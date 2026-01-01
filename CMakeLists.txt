@@ -8,6 +8,16 @@ add_library(OpenGedcom::OpenGedcom ALIAS OpenGedcom)
 
 set(PUBLIC_INCLUDE include/OpenGedcom)
 
+set(Reader_Files 
+    src/Reader/GedcomReader.h
+    src/Reader/GedcomReader.cpp
+
+    src/Reader/SourceReaders/ISourceReader.h
+
+    src/Reader/SourceReaders/Utf8SourceReader.h
+    src/Reader/SourceReaders/Utf8SourceReader.cpp
+)
+
 target_sources(OpenGedcom
     PUBLIC
         ${PUBLIC_INCLUDE}/OpenGedcom.h
@@ -19,8 +29,8 @@ target_sources(OpenGedcom
 
         src/Utility/LineRingBuffer.h
 
-        src/Reader/GedcomReader.h
-        src/Reader/GedcomReader.cpp
+        ${Reader_Files}
+        
 )
 
 target_include_directories(OpenGedcom
