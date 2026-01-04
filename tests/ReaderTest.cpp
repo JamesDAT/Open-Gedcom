@@ -25,13 +25,40 @@ namespace OpenGedcom {
     }
 
     void ReaderTest::TestLineReading() {
-        GedcomReader reader{};
-        reader.ReadFile("Samples/555SAMPLE.ged");
+        // sample file reading
+        GedcomReader sampleReader{};
+        sampleReader.ReadFile("Samples/555SAMPLE.ged");
 
-        auto line = reader.GetNextLine();
-        while(line != std::nullopt) {
-            std::cout << line.value() << '\n';
-            line = reader.GetNextLine();
+        auto sampleLine = sampleReader.GetNextLine();
+
+        assert(sampleLine != std::nullopt);
+
+        while(sampleLine != std::nullopt) {
+            //std::cout << sampleLine.value() << '\n';
+            sampleLine = sampleReader.GetNextLine();
         }
+
+        // empty file reading
+        GedcomReader emptyReader{};
+        emptyReader.ReadFile("Samples/empty.ged");
+
+        auto emptyLine = emptyReader.GetNextLine();
+        assert(emptyLine == std::nullopt);
+
+        // stress testing
+        GedcomReader stressReader{};
+        stressReader.ReadFile("Samples/large_test.ged");
+
+        std::cout << "Read file" << '\n';
+
+        size_t lineCount = 0;
+        auto stressLine = stressReader.GetNextLine();
+        while(stressLine != std::nullopt) {
+            std::cout << stressLine.value() << '\n';
+            ++lineCount;
+            stressLine = stressReader.GetNextLine();
+        }
+
+        std::cout << "Stress test found {" << lineCount << "} lines\n";
     }
 }
