@@ -23,11 +23,11 @@ target_sources(OpenGedcom
         ${PUBLIC_INCLUDE}/OpenGedcom.h
         ${PUBLIC_INCLUDE}/GedcomViews.h
         ${PUBLIC_INCLUDE}/GedcomObject.h
+        ${PUBLIC_INCLUDE}/GedcomStorage.h
     PRIVATE
         src/OpenGedcom.cpp
+        src/GedcomStorage.cpp
         src/Tests.h
-
-        src/Utility/LineRingBuffer.h
 
         ${Reader_Files}
         

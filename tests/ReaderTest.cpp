@@ -1,4 +1,7 @@
 #include "ReaderTest.h"
+
+#include "Reader/GedcomReader.h"
+
 #include <cassert>
 #include <iostream>
 
@@ -47,18 +50,18 @@ namespace OpenGedcom {
 
         // stress testing
         GedcomReader stressReader{};
-        stressReader.ReadFile("Samples/large_test.ged");
+        auto future = stressReader.ReadFile("Samples/large_test.ged");
 
         std::cout << "Read file" << '\n';
 
         size_t lineCount = 0;
         auto stressLine = stressReader.GetNextLine();
         while(stressLine != std::nullopt) {
-            std::cout << stressLine.value() << '\n';
             ++lineCount;
             stressLine = stressReader.GetNextLine();
         }
 
         std::cout << "Stress test found {" << lineCount << "} lines\n";
+        future.wait();
     }
 }

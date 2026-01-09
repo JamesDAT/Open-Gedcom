@@ -4,19 +4,18 @@
 
 #pragma once
 #include <filesystem>
-#include <string_view>
-#include <vector>
-#include <unordered_map>
 
 #include "GedcomViews.h"
 #include "GedcomObject.h"
+#include "GedcomStorage.h"
 
 namespace OpenGedcom {
+
     class Document {
     public:
         /// @brief Read and parse a Gedcom file into the OpenGedcom Document format.
         /// @param path 
-        //static Document ParseFile(const std::filesystem::path& path);
+        static Document ParseFile(const std::filesystem::path& path);
 
         Document();
         ~Document();
@@ -50,20 +49,9 @@ namespace OpenGedcom {
         //void SaveFile(const std::filesystem::path& path) const;
 
     private:
+
         // storage
-        std::unordered_map<EntityID, IndividualRecord> m_individuals;
-        std::unordered_map<EntityID, FamilyRecord> m_families;
-
-        // id mappings
-        std::unordered_map<std::string, EntityID> m_externalToInternal;
-        std::vector<std::string> m_internalToExternal;
-
-        // name index
-        std::unordered_multimap<NameKey, EntityID, NameKeyHash> m_nameIndex;
-
-        // id
-        EntityID m_nextEntityID = 1;
-        //EntityID AllocateID();
+        GedcomStorage m_storage;
 
     };
 }

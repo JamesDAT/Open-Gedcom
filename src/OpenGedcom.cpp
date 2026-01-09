@@ -2,13 +2,17 @@
 // SPDX-License-Identifier: MIT
 
 #include <OpenGedcom/OpenGedcom.h>
+#include "Parser/GedcomParser.h"
 
-
-// testing
-#include "Reader/GedcomReader.h"
 namespace OpenGedcom {
     Document::Document() = default;
 
     Document::~Document() = default;
+
+    Document Document::ParseFile(const std::filesystem::path &path) {
+        GedcomParser parser{path};
+
+        return {};
+    }
 }
 

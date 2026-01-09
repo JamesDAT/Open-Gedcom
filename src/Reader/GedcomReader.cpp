@@ -17,7 +17,7 @@ namespace OpenGedcom {
     }
 
     std::future<void> GedcomReader::ReadFile(const std::filesystem::path& path) {
-        return std::async(std::launch::async, [&](){
+        return std::async(std::launch::async, [this, path](){
             // create stream
             std::ifstream file(path, std::ios::binary);
 
@@ -75,6 +75,7 @@ namespace OpenGedcom {
                 m_eof = true;
             }
             m_notEmpty.notify_all();
+            m_notFull.notify_all();
         });
     }
 
@@ -96,6 +97,10 @@ namespace OpenGedcom {
     void GedcomReader::PushLine(std::string&& text) {
         std::unique_lock lock(m_mutex);
         m_notFull.wait(lock, [this]() { return m_lineQueue.size() < m_maxQueueSize; });
+
+        if(m_eof)
+            return;
+
         m_lineQueue.push(std::move(text));
         lock.unlock();
         m_notEmpty.notify_one();

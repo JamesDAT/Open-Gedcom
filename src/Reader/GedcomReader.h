@@ -13,7 +13,6 @@
 #include <memory>
 #include <optional>
 
-#include "Utility/LineRingBuffer.h"
 #include "SourceReaders/ISourceReader.h"
 
 #include "Tests.h"
