@@ -3,8 +3,6 @@
 
 #include "GedcomReader.h"
 #include "Reader/SourceReaders/Utf8SourceReader.h"
-#include <atomic>
-#include <iostream>
 #include <stdexcept>
 
 namespace OpenGedcom {
@@ -18,92 +16,73 @@ namespace OpenGedcom {
 
     std::future<void> GedcomReader::ReadFile(const std::filesystem::path& path) {
         return std::async(std::launch::async, [this, path](){
-            // create stream
-            std::ifstream file(path, std::ios::binary);
-
-            // get the encoding from the BOM
-            auto encoding = DetectEncoding(file);
-
-            switch(encoding.encoding) {
-                case TextEncoding::Utf8:
-                    m_sourceReader = std::make_unique<UTF8SourceReader>(file, encoding.bomSize);
-                break;
-
-                case TextEncoding::Utf16LE:
-                    throw std::runtime_error("Utf16LE is not supported yet!");
-                break;
-
-                case TextEncoding::Utf16BE:
-                    throw std::runtime_error("Utf16BE is not supported yet!");
-                break;
-            }
-
-            std::string buffer;
-            buffer.reserve(ISourceReader::CHUNK_SIZE);
-            while(m_sourceReader->ReadChunk(buffer)) {
-                size_t start = 0;
-
-                while(true) {
-                    size_t newline = buffer.find('\n', start);
-                    if(newline == std::string::npos) {
-                        break;
-                    }
-
-                    // \r\n
-                    size_t lineEnd = newline;
-                    if(lineEnd > start && buffer[lineEnd - 1] == '\r') {
-                        --lineEnd;
-                    }
-
-                    std::string line;
-                    line.assign(buffer.data() + start, lineEnd - start);
-                    PushLine(std::move(line));
-                    start = newline + 1;
-                }
-
-                buffer.erase(0, start);
-            }
-
-            if(!buffer.empty()) {
-                PushLine(std::move(buffer));
-                buffer.clear();
-            }
-
-            // reached end of file
-            {
-                std::unique_lock lock(m_mutex);
-                m_eof = true;
-            }
-            m_notEmpty.notify_all();
-            m_notFull.notify_all();
+            ReadFileInternal(path);
         });
     }
 
-    std::optional<std::string> GedcomReader::GetNextLine() {
-        std::unique_lock lock(m_mutex);
-        m_notEmpty.wait(lock, [this]() { return !m_lineQueue.empty() || m_eof; });
+    void GedcomReader::ReadFileInternal(const std::filesystem::path& path) {
+        if(!std::filesystem::exists(path)) {
+            throw std::runtime_error("File does not exist");
+        }
 
-        if (m_lineQueue.empty()) return std::nullopt;
+        // create stream
+        std::ifstream file(path, std::ios::binary);
 
-        std::string line = std::move(m_lineQueue.front());
-        m_lineQueue.pop();
+        // get the encoding from the BOM
+        auto encoding = DetectEncoding(file);
 
-        lock.unlock();
-        m_notFull.notify_one();
+        switch(encoding.encoding) {
+            case TextEncoding::Utf8:
+                m_sourceReader = std::make_unique<UTF8SourceReader>(file, encoding.bomSize);
+            break;
 
-        return line;
+            case TextEncoding::Utf16LE:
+                throw std::runtime_error("Utf16LE is not supported yet!");
+            break;
+
+            case TextEncoding::Utf16BE:
+                throw std::runtime_error("Utf16BE is not supported yet!");
+            break;
+        }
+
+        // read buffer parsing into lines
+        std::string buffer;
+        buffer.reserve(ISourceReader::CHUNK_SIZE);
+        while(m_sourceReader->ReadChunk(buffer)) {
+            size_t start = 0;
+
+            while(true) {
+                size_t newline = buffer.find('\n', start);
+                if(newline == std::string::npos) {
+                    break;
+                }
+
+                // \r\n
+                size_t lineEnd = newline;
+                if(lineEnd > start && buffer[lineEnd - 1] == '\r') {
+                    --lineEnd;
+                }
+
+                std::string line;
+                line.assign(buffer.data() + start, lineEnd - start);
+                m_ringBuffer.PushLine(std::move(line));
+                start = newline + 1;
+            }
+
+            buffer.erase(0, start);
+        }
+
+        // non finished line left in buffer
+        if(!buffer.empty()) {
+            m_ringBuffer.PushLine(std::move(buffer));
+            buffer.clear();
+        }
+
+        m_ringBuffer.MarkEOF();
     }
 
-    void GedcomReader::PushLine(std::string&& text) {
-        std::unique_lock lock(m_mutex);
-        m_notFull.wait(lock, [this]() { return m_lineQueue.size() < m_maxQueueSize; });
-
-        if(m_eof)
-            return;
-
-        m_lineQueue.push(std::move(text));
-        lock.unlock();
-        m_notEmpty.notify_one();
+    std::optional<std::string> GedcomReader::GetNextLine() {
+        return m_ringBuffer.GetLine();
     }
 
     EncodingInfo GedcomReader::DetectEncoding(std::ifstream& file) {
@@ -136,5 +115,9 @@ namespace OpenGedcom {
 
         // no BOM
         return { TextEncoding::Utf8, 0 };
+    }
+
+    void GedcomReader::PushLine(std::string line) {
+        m_ringBuffer.PushLine(std::move(line));
     }
 }

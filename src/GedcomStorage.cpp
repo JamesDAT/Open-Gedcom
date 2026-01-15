@@ -5,6 +5,7 @@
 
 namespace OpenGedcom {
     void GedcomStorage::Emit(int level, std::string_view xref, std::string_view tagName, std::string_view value) {
+
         // create tag
         auto tag = m_registry.Create(std::string{tagName}, std::string{value});
         GedcomTag* tagPtr = tag.get();

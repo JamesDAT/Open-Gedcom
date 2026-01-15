@@ -16,6 +16,7 @@ namespace OpenGedcom {
     UTF8SourceReader::~UTF8SourceReader() = default;
 
     bool UTF8SourceReader::ReadChunk(std::string& out) {
+
         if(!m_file.good() && m_carry.empty()) {
             return false;
         }

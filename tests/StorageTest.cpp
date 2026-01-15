@@ -1,4 +1,5 @@
 #include "StorageTest.h"
+#include "Parser/GedcomParser.h"
 #include <OpenGedcom/GedcomStorage.h>
 #include <OpenGedcom/GedcomObject.h>
 #include <cassert>
@@ -19,6 +20,28 @@ namespace OpenGedcom {
     }
 
     void StorageTest::TestTagEmit() {
+        GedcomStorage storage{};
+        TagType indi = storage.Registry().RegisterTag<IndiTag>("INDI");
+        TagType occu = storage.Registry().RegisterTag<OccuTag>("OCCU");
 
+        storage.Emit(0, "", "INDI", "Person /NAME/");
+        storage.Emit(0, "", "OCCU", "Some Occupation");
+        storage.Emit(0, "", "INAVLID", "Invalid Tag");
+
+        assert(storage.GetGraph()[0]->tag->Value() == "Person /NAME/");
+        assert(storage.GetGraph()[1]->tag->Value() == "Some Occupation");
+        assert(storage.GetGraph()[2]->tag->Value() == "Invalid Tag");
+
+        assert(storage.GetGraph()[0]->tag->Type() == indi);
+        assert(storage.GetGraph()[1]->tag->Type() == occu);
+        assert(storage.GetGraph()[2]->tag->Type() == 0);
+    }
+
+    void StorageTest::TestParserEmit() {
+        GedcomStorage storage{};
+        GedcomParser parser{"tests/Samples/555SAMPLE.ged", storage};
+        parser.Parse();
+
+        std::cout << "Node Count: " << storage.GetGraph().size() << '\n';
     }
 }

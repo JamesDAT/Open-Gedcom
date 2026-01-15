@@ -10,9 +10,13 @@ namespace OpenGedcom {
     Document::~Document() = default;
 
     Document Document::ParseFile(const std::filesystem::path &path) {
-        GedcomParser parser{path};
+        GedcomStorage storage;
+        GedcomParser parser{path, storage};
 
-        return {};
+        Document doc;
+        doc.m_storage = std::move(storage);
+
+        return std::move(doc);
     }
 }
 

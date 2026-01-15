@@ -21,4 +21,8 @@ int main() {
     OpenGedcom::StorageTest::TestTagEmit();
     std::cout << count << " TestTagEmit Passed\n";
     count++;
+
+    OpenGedcom::StorageTest::TestParserEmit();
+    std::cout << count << " TestParserEmit Passed\n";
+    count++;
 }

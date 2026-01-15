@@ -2,18 +2,14 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
-#include <condition_variable>
 #include <filesystem>
 #include <future>
-#include <queue>
-#include <semaphore>
-#include <string_view>
 #include <string>
-#include <atomic>
 #include <memory>
 #include <optional>
 
 #include "SourceReaders/ISourceReader.h"
+#include "LineRingBuffer.h"
 
 #include "Tests.h"
 
@@ -49,19 +45,14 @@ namespace OpenGedcom {
 
 
     private:
-        void PushLine(std::string&& text);
         EncodingInfo DetectEncoding(std::ifstream& file);
         
-        std::queue<std::string> m_lineQueue;
-        std::mutex m_mutex;
-        std::condition_variable m_notEmpty;
-        std::condition_variable m_notFull;
-        size_t m_maxQueueSize = 1024;
-
-        bool m_eof = false;
+        LineRingBuffer m_ringBuffer{};
 
         std::unique_ptr<ISourceReader> m_sourceReader;
 
+        void ReadFileInternal(const std::filesystem::path& path);
+        void PushLine(std::string line); // used for debug
 
         OPENGEDCOM_TEST_FRIEND(ReaderTest)
     };

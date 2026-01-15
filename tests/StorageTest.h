@@ -5,5 +5,6 @@ namespace OpenGedcom {
     public:
         static void TestRegistry();
         static void TestTagEmit();
+        static void TestParserEmit();
     };
 }

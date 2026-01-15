@@ -18,6 +18,11 @@ set(Reader_Files
     src/Reader/SourceReaders/Utf8SourceReader.cpp
 )
 
+set(Parser_Files
+    src/Parser/GedcomParser.h
+    src/Parser/GedcomParser.cpp
+)
+
 target_sources(OpenGedcom
     PUBLIC
         ${PUBLIC_INCLUDE}/OpenGedcom.h
@@ -30,6 +35,7 @@ target_sources(OpenGedcom
         src/Tests.h
 
         ${Reader_Files}
+        ${Parser_Files}
         
 )
 

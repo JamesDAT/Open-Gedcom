@@ -28,3 +28,6 @@ cmake .. \
     -DOPENGEDCOM_BUILD_TESTS=ON
 
 cmake --build .
+
+./tests/OpenGedcomTests
+
