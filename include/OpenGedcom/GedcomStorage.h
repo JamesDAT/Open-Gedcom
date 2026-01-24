@@ -3,6 +3,9 @@
 
 #pragma once
 #include "GedcomObject.h"
+#include "GedcomRegistry.h"
+
+#include <optional>
 
 namespace OpenGedcom {
     // gedcom storage object
@@ -23,7 +26,7 @@ namespace OpenGedcom {
         const TagRegistry& Registry() const { return m_registry; }
 
         // parser emit function
-        void Emit(int level, std::string_view xref, std::string_view tag, std::string_view value);
+        void Emit(int level, std::optional<uint32_t> xref, std::string_view tag, std::string_view value);
 
         const std::vector<GedcomNode*> GetGraph() const { return m_roots; };
 

@@ -4,7 +4,7 @@
 #include <OpenGedcom/GedcomStorage.h>
 
 namespace OpenGedcom {
-    void GedcomStorage::Emit(int level, std::string_view xref, std::string_view tagName, std::string_view value) {
+    void GedcomStorage::Emit(int level, std::optional<uint32_t> xref, std::string_view tagName, std::string_view value) {
 
         // create tag
         auto tag = m_registry.Create(std::string{tagName}, std::string{value});
@@ -26,6 +26,10 @@ namespace OpenGedcom {
         if(level == 0) {
             m_roots.push_back(nodePtr);
             nodePtr->parent = nullptr;
+
+            if(xref != std::nullopt) {
+                nodePtr->ref.id = xref.value(); 
+            }
         }
         else {
             GedcomNode* parent = m_levelStack[level - 1];

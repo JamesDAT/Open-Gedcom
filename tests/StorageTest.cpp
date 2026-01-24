@@ -24,9 +24,9 @@ namespace OpenGedcom {
         TagType indi = storage.Registry().RegisterTag<IndiTag>("INDI");
         TagType occu = storage.Registry().RegisterTag<OccuTag>("OCCU");
 
-        storage.Emit(0, "", "INDI", "Person /NAME/");
-        storage.Emit(0, "", "OCCU", "Some Occupation");
-        storage.Emit(0, "", "INAVLID", "Invalid Tag");
+        storage.Emit(0, std::nullopt, "INDI", "Person /NAME/");
+        storage.Emit(0, std::nullopt, "OCCU", "Some Occupation");
+        storage.Emit(0, std::nullopt, "INAVLID", "Invalid Tag");
 
         assert(storage.GetGraph()[0]->tag->Value() == "Person /NAME/");
         assert(storage.GetGraph()[1]->tag->Value() == "Some Occupation");

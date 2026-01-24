@@ -2,6 +2,7 @@ add_executable(OpenGedcomTests
     Test_main.cpp
     ReaderTest.cpp
     StorageTest.cpp
+    DocumentTest.cpp
 )
 
 target_link_libraries(OpenGedcomTests
