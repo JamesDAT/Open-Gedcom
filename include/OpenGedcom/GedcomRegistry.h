@@ -7,6 +7,7 @@
 
 #include <functional>
 #include <string_view>
+#include <typeindex>
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -33,9 +34,12 @@ namespace OpenGedcom {
                         std::string(tagName),
                         TagEntry{
                             .id = id,
-                            .creator = &CreateTag<T>
+                            .creator = &CreateTag<T>,
+                            .type = std::type_index(typeid(T))
                         }
                     );
+
+                    m_typeToId.emplace(std::type_index(typeid(T)), id);
 
                     return id;
         }
@@ -60,9 +64,23 @@ namespace OpenGedcom {
             return INVALID_TAG;
         }
 
-        bool IsType(GedcomTag* tag, const std::string& tagName) {
+        bool IsType(const GedcomTag* tag, const std::string& tagName) {
             TagType type = Find(tagName);
             return tag->Type() == type;
+        }
+
+        template<GedcomTagType T>
+        bool IsType(const GedcomTag* tag) const {
+            auto it = m_typeToId.find(std::type_index(typeid(T)));
+            if(it == m_typeToId.end())
+                return false;
+
+            return tag->Type() == it->second;
+        }
+
+        template<GedcomTagType T>
+        T* As(GedcomTag* tag) const {
+            return IsType<T>(tag) ? static_cast<T*>(tag) : nullptr;
         }
 
     private:
@@ -73,9 +91,11 @@ namespace OpenGedcom {
         struct TagEntry {
             TagType id;
             Creator creator;
+            std::type_index type;
         };
 
         std::unordered_map<std::string, TagEntry, std::hash<std::string>, std::equal_to<>> m_registry;
+        std::unordered_map<std::type_index, TagType> m_typeToId;
 
         template<typename T>
         static std::unique_ptr<GedcomTag> CreateTag(std::string_view value) {
