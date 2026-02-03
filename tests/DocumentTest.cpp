@@ -1,18 +1,26 @@
 #include "DocumentTest.h"
 #include "OpenGedcom/OpenGedcom.h"
 #include <iostream>
+#include <chrono>
 
 namespace OpenGedcom {
     void DocumentTest::TestDocument() {
-        Document doc = Document::ParseFile("tests/Samples/spec7Generated.ged");
+        auto start = std::chrono::steady_clock::now();
+
+        Document doc = Document::ParseFile("tests/Samples/large_test.ged");
         auto& storage = doc.Storage();
         auto& graph = storage.Graph();
 
-        std::cout << "Graph Size: " << graph.size() << '\n';
+        auto end = std::chrono::steady_clock::now();
 
-        for(auto& record : graph) {
-            PrintChildren(record.get());
-        }
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+        std::cout << "Graph Size: " << graph.size() << '\n';
+        std::cout << "Elapsed: " << duration.count() << " milliseconds\n";
+
+        //for(auto& record : graph) {
+            //PrintChildren(record.get());
+        //}
     }
 
     void DocumentTest::PrintChildren(GedcomTag* tag) {

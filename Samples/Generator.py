@@ -34,6 +34,6 @@ with open(output_file, "wb") as f:
             ""  # blank line between individuals
         ]
         # Join lines with CRLF or LF depending on your preference
-        f.write(("\n".join(lines) + "\n").encode("utf-8"))
+        f.write(("\n".join(lines)).encode("utf-8"))
 
 print(f"Generated {output_file} with {num_individuals} individuals.")
