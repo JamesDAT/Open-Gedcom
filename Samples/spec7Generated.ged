@@ -1,0 +1,267 @@
+0 HEAD
+1 GEDC
+2 VERS 7.0
+1 SOUR ExampleGenApp
+2 VERS 1.2.3
+2 CORP ExampleGenealogy Inc.
+1 CHAR UTF-8
+1 LANG en-US
+1 SCHMA http://gedcom.io/schema/7.0
+1 COPR Copyright (c) 2026 ExampleGenealogy Inc.
+1 NOTE This GEDCOM 7 sample file exercises many standard tags.
+
+0 @S1@ SOUR
+1 TITL Parish & Civil Records Collection
+1 ABBR PCRC
+1 AUTH Dr. Alice Historian
+1 PUBL "Parish Records Publishing"
+1 CALN "CallNo: PCRC-2023"
+1 REPO @R1@
+1 DATA
+2 TEXT Digitized parish and civil registry entries used as evidence.
+2 NOTE Source contains transcriptions and scanned images.
+
+0 @R1@ REPO
+1 CORP St Mary's County Archive
+1 ADDR 12 Archive Lane
+2 CITY St. Marytown
+2 STAE Victoria
+2 POST 3000
+2 CTRY Australia
+1 CALN ARCH-STM-001
+
+0 @U1@ SUBM
+1 NAME "Brunton Girth"
+1 ADDR 99 Research Way
+2 CITY Melbourne
+2 STAE Victoria
+2 POST 3142
+2 CTRY Australia
+1 PHON +61-3-9000-0000
+1 EMAIL brunton@example.com
+
+0 @O1@ OBJE
+1 FILE https://example.org/media/i1.jpg
+1 FORM image/jpeg
+1 MEDI photo
+1 WIDTH 1920
+1 HEIGHT 1080
+1 LEFT 0
+1 TOP 0
+1 TITL "Portrait, John A. Example"
+
+0 @N1@ SNOTE
+1 TEXT This shared note explains that dates in this file have been normalized to ISO-like presentation when exact values were available.
+2 CONT This SNOTE is referenced by multiple records to avoid duplication and to demonstrate shared notes.
+2 CONT It demonstrates multi-line note text under a shared note record.
+
+0 @I1@ INDI
+1 UID 11111111-1111-1111-1111-111111111111
+1 REFN REF-IND-0001
+1 EXID EXT-I-0001
+1 NAME "John /Example/"
+2 NPFX Mr.
+2 GIVN John Andrew
+2 SURN Example
+1 SEX M
+1 BIRT
+2 DATE 16 MAR 1950
+2 SDATE 1950-03-16
+2 TIME 14:30:00
+2 PLAC "St. Marytown, Victoria, Australia"
+2 PHRASE "Baptism record and civil birth index agree."
+1 BAPM
+2 DATE 25 MAR 1950
+2 PLAC "St. Marytown Parish Church"
+1 DEAT
+2 DATE 10 OCT 2018
+2 PLAC "Melbourne General Cemetery, Melbourne, Victoria, Australia"
+1 BURI
+2 DATE 15 OCT 2018
+2 PLAC "Melbourne General Cemetery"
+1 OCCU "Primary school teacher; retired 2012"
+1 NCHI 3
+1 NMR 1
+1 NATI Australian
+1 IDNO "AU-IND-000111"
+1 SSN "123-45-678"
+1 RESI
+2 ADDR "45 Suburb Lane"
+3 CITY Melbourne
+3 STAE Victoria
+3 POST 3142
+3 CTRY Australia
+1 PHON +61-3-9001-1111
+1 EMAIL john.example@example.org
+1 WWW https://example.org/john-example
+1 NOTE @N1@
+1 OBJE @O1@
+1 SOUR @S1@
+2 PAGE "parish:/entry/1950-03-16"
+2 CALN "PCRC-1950-03-16"
+2 AGNC "Parish Transcription Office"
+1 CHAN
+2 DATE 2023-12-01
+2 AUTH @U1@
+
+0 @I2@ INDI
+1 UID 22222222-2222-2222-2222-222222222222
+1 REFN REF-IND-0002
+1 NAME "Mary /Example/"
+2 GIVN Mary Elizabeth
+2 SURN Example
+1 SEX F
+1 BIRT
+2 DATE 10 JUN 1952
+2 PLAC "St. Marytown, Victoria, Australia"
+1 BLES
+2 DATE 20 JUN 1952
+2 PLAC "Local Chapel"
+1 DEAT
+2 DATE 01 JAN 2022
+2 PLAC "Melbourne, Victoria, Australia"
+1 DSCR "Height: 165 cm; eyes: brown; hair: grey in later years"
+1 EDUC "Primary teaching certificate; Diploma in Education"
+1 RELI "Anglican"
+1 RESI
+2 ADDR "45 Suburb Lane"
+3 CITY Melbourne
+3 STAE Victoria
+3 POST 3142
+3 CTRY Australia
+1 PHON +61-3-9001-2222
+1 EMAIL mary.example@example.org
+1 NOTE "Mary served as a local volunteer and was recorded in local newspapers."
+1 CHAN
+2 DATE 2024-01-05
+2 AUTH @U1@
+
+0 @I3@ INDI
+1 UID 33333333-3333-3333-3333-333333333333
+1 REFN REF-IND-0003
+1 NAME "Alice /Example/"
+2 GIVN Alice Marie
+2 SURN Example
+1 SEX F
+1 BIRT
+2 DATE ABT 1975
+2 PLAC "Melbourne, Victoria, Australia"
+1 ADOP
+2 DATE 1 SEP 1975
+2 PLAC "St. Marytown"
+1 CHR
+2 DATE 20 SEP 1975
+2 PLAC "Community Church, Melbourne"
+1 CONF
+2 DATE 05 OCT 1990
+2 PLAC "St. Marytown Parish"
+1 FACT "Military service"
+2 TYPE "Army Reserve"
+1 OCCU "Civil engineer"
+1 IDNO "ID-EX-333"
+1 RESI
+2 ADDR "12 New Estate"
+3 CITY Melbourne
+3 STAE Victoria
+3 POST 3142
+3 CTRY Australia
+1 NOTE "Alice was adopted shortly after birth; adoption records held in county archive."
+1 SOUR @S1@
+2 PAGE "archive:adoptions/1975/03"
+1 CHAN
+2 DATE 2024-01-07
+2 AUTH @U1@
+
+0 @I4@ INDI
+1 UID 44444444-4444-4444-4444-444444444444
+1 REFN REF-IND-0004
+1 NAME "Thomas /Example/"
+2 GIVN Thomas Robert
+2 SURN Example
+1 SEX M
+1 BIRT
+2 DATE 12 FEB 1970
+2 PLAC "Adelaide, South Australia, Australia"
+1 NATU
+2 DATE 01 JUL 1995
+2 PLAC "Melbourne, Victoria, Australia"
+1 ENGAGEMENT
+2 TYPE "Civil engagement"  ; disregard — demonstration (note: keep to standard tag below)
+1 ENGA
+2 DATE 20 JUN 1999
+2 PLAC "Melbourne Town Hall"
+1 MARR
+2 DATE 12 DEC 1999
+2 PLAC "St. Marytown Parish Church"
+2 PHRASE "Civil ceremony followed by church blessing."
+1 PROB
+2 DATE 08 MAR 2020
+2 PLAC "County Probate Court"
+1 RETI
+2 DATE 31 DEC 2015
+2 PHRASE "Retired from full-time employment"
+1 NOTE "Thomas and Alice are spouses in a blended household."
+1 CHAN
+2 DATE 2024-01-08
+2 AUTH @U1@
+
+0 @F1@ FAM
+1 UID fam-0001
+1 HUSB @I1@
+1 WIFE @I2@
+1 CHIL @I3@
+1 CHIL @I4@
+1 MARR
+2 DATE 12 DEC 1999
+2 PLAC "St. Marytown Parish Church"
+2 SOUR @S1@
+3 PAGE "marriage-book:vol12:page45"
+1 ADOP
+2 DATE 01 SEP 1975
+2 PLAC "St. Marytown County Court"
+1 PEDI BIRTH
+1 NOTE "Blended family: child Alice is documented as adopted into the family unit."
+1 CHAN
+2 DATE 2024-02-01
+2 AUTH @U1@
+
+0 @S2@ SOUR
+1 TITL "Newspaper Archive: 'The Daily Chronicle' Selected Articles"
+1 AUTH "Chronicle Publishing"
+1 PUBL "The Daily Chronicle, microfilm edition"
+1 CALN CHRON-1970S
+1 DATA
+2 TEXT "Selection of articles used to corroborate events."
+2 NOTE "Contains obituaries and social notices."
+
+0 @I5@ INDI
+1 UID 55555555-5555-5555-5555-555555555555
+1 REFN REF-IND-0005
+1 NAME "Eve /Example/"
+2 GIVN Eve Lorraine
+2 SURN Example
+1 SEX F
+1 BIRT
+2 DATE 02 FEB 2000
+2 PLAC "Brisbane, Queensland, Australia"
+1 CREM
+2 DATE 10 OCT 2080
+2 PLAC "Futuristic Cemetery"
+1 FACT "Notable: first astronaut from family"
+1 OCCU "Aerospace engineer"
+1 DSCR "Height 170 cm; brown eyes; athletic build"
+1 PROP "Family home (sold 2035)"
+1 RESI
+2 ADDR "Unit 5, Sky Tower"
+3 CITY Brisbane
+3 STAE Queensland
+3 POST 4000
+3 CTRY Australia
+1 NOTE "Eve's cremation is included to demonstrate CREM event usage."
+1 SOUR @S2@
+2 PAGE "obit:2080:10:12"
+1 CHAN
+2 DATE 2040-06-01
+2 AUTH @U1@
+
+0 TRLR
