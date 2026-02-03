@@ -28,16 +28,15 @@ namespace OpenGedcom {
         // parser emit function
         void Emit(int level, std::optional<uint32_t> xref, std::string_view tag, std::string_view value);
 
-        const std::vector<GedcomNode*> GetGraph() const { return m_roots; };
+        const std::vector<std::unique_ptr<GedcomTag>>& Graph() const { return m_tags; }
+        std::vector<std::unique_ptr<GedcomTag>>& Graph() { return m_tags; }
 
     private:
         // storage ownership
         std::vector<std::unique_ptr<GedcomTag>> m_tags;
-        std::vector<std::unique_ptr<GedcomNode>> m_nodes;
 
-        // trees
-        std::vector<GedcomNode*> m_levelStack;
-        std::vector<GedcomNode*> m_roots;
+        // stack
+        std::vector<GedcomTag*> m_stack;
 
         TagRegistry m_registry;
     };

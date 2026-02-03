@@ -1,0 +1,81 @@
+Tag,Section,Description,ValueType
+HEAD,Record,Header pseudo-record containing file metadata,None
+TRLR,Record,Trailer pseudo-record marking end of file,None
+INDI,Record,Individual person record,None
+FAM,Record,Family record linking individuals,None
+SOUR,Record,Source record describing evidence,None
+REPO,Record,Repository record describing source holder,None
+SUBM,Record,Submitter/contributor record,None
+OBJE,Record,Multimedia object record,None
+SNOTE,Record,Shared note record,None
+,,,
+UID,Identity,Globally unique persistent identifier,String (UUID)
+REFN,Identity,User-defined reference number,String
+EXID,Identity,External system identifier,String
+,,,
+NAME,Names,Personal name structure,String
+NPFX,Names,Name prefix (e.g. Dr Sir),String
+GIVN,Names,Given names,String
+SURN,Names,Surname or family name,String
+TYPE,Names,Classification of name or structure,String
+,,,
+SEX,Attributes,Sex classification,Enum (M F X U)
+FACT,Attributes,Generic fact or attribute,String
+OCCU,Attributes,Occupation,String
+CAST,Attributes,Caste or social class,String
+RESI,Attributes,Residence fact,None
+STAT,Attributes,Status value,Enum
+ROLE,Attributes,Role played in an event,Enum
+,,,
+BIRT,Events,Birth event,None
+DEAT,Events,Death event,None
+MARR,Events,Marriage event,None
+BURI,Events,Burial event,None
+IMMI,Events,Immigration event,None
+EMIG,Events,Emigration event,None
+ORDN,Events,Ordination event,None
+WILL,Events,Will event,None
+EVEN,Events,Generic event,None
+,,,
+DATE,Dates,Event date,DateValue
+SDATE,Dates,Sort date hint,DateValue
+TIME,Dates,Time of event,TimeValue
+,,,
+PLAC,Places,Place name,String
+FORM,Places,Place or media format descriptor,String
+,,,
+ADDR,Addresses,Structured postal address,String
+CITY,Addresses,City name,String
+STAE,Addresses,State or province,String
+POST,Addresses,Postal or ZIP code,String
+CTRY,Addresses,Country name,String
+ADR1,Addresses,Address line 1,String
+,,,
+PHON,Contact,Telephone number,String
+EMAIL,Contact,Email address,String
+FAX,Contact,Fax number,String
+WWW,Contact,Website URL,String
+,,,
+PAGE,Sources,Location within a source,String
+CALN,Sources,Call number in repository,String
+AGNC,Sources,Agency responsible for data,String
+TITL,Sources,Title of source or work,String
+ABBR,Sources,Abbreviated title,String
+,,,
+FILE,Multimedia,External media file reference,URI/String
+WIDTH,Multimedia,Display width,Integer
+HEIGHT,Multimedia,Display height,Integer
+LEFT,Multimedia,Left crop offset,Integer
+TOP,Multimedia,Top crop offset,Integer
+,,,
+TEXT,Notes,Text body,String
+NOTE,Notes,Inline note,String
+TRAN,Notes,Translated text,String
+CONT,Notes,Continuation of previous line,String
+,,,
+GEDC,Header,GEDCOM version container,None
+VERS,Header,GEDCOM or software version,String
+CHAR,Header,Character encoding,String (UTF-8)
+LANG,Header,Default language,BCP47 language tag
+SCHMA,Header,Schema extension declarations,None
+CORP,Header,Corporate entity name,String

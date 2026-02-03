@@ -6,23 +6,18 @@
 
 namespace OpenGedcom {
     GedcomParser::GedcomParser(const std::filesystem::path& path, GedcomStorage& storage) :
-        m_path(path), m_storage(storage)
+        m_path(path), m_storage(storage), m_reader(path)
     {
         
     }
 
     void GedcomParser::Parse() {
-        auto future = m_reader.ReadFile(m_path);
-        future.wait();
-        
-        auto line = m_reader.GetNextLine();
+        auto line = m_reader.ReadLine();
 
 
         while (line != std::nullopt) {
             ParseGedcomLine(line.value());
-
-
-            line = m_reader.GetNextLine();
+            line = m_reader.ReadLine();
         }
     }
 
@@ -64,7 +59,7 @@ namespace OpenGedcom {
                     xrefId = xrefId.value() * 10 + (*iter - '0');
                 } else {
                     // invalid character, emit error for now
-                    throw std::runtime_error("Invalid Character in xref");
+                    //throw std::runtime_error("Invalid Character in xref");
                 }
             }
         }

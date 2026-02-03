@@ -4,25 +4,26 @@
 #pragma once
 #include "ISourceReader.h"
 #include <fstream>
-#include <vector>
+#include <array>
 #include <cstdint>
 
 namespace OpenGedcom {
     class UTF8SourceReader : public ISourceReader {
     public:
-        explicit UTF8SourceReader(std::ifstream& file, size_t startOffset);
+        explicit UTF8SourceReader(std::ifstream& file, size_t startOffset = 0);
         ~UTF8SourceReader();
         
-        bool ReadChunk(std::string& out) override;
+        std::optional<std::string> ReadLine() override;
 
     private:
         std::ifstream& m_file;
-        bool m_bomChecked = false;
 
-        std::vector<uint8_t> m_buffer;
-        std::vector<uint8_t> m_carry;
+        static constexpr size_t BUFFER_SIZE = 4096;
+        std::array<uint8_t, BUFFER_SIZE> m_buffer{};
 
-        inline size_t Utf8SequenceLength(uint8_t lead);
+        std::string m_pending;
+        std::string m_carry;
+
         inline size_t Utf8IncompleteTail(const uint8_t* data, size_t size);
     };
 }

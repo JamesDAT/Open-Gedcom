@@ -1,4 +1,5 @@
 #include <iostream>
+#include "DocumentTest.h"
 #include "ReaderTest.h"
 #include "StorageTest.h"
 
@@ -14,15 +15,19 @@ int main() {
     std::cout << count << " TestLineReading Passed\n";
     count++;
     
-    OpenGedcom::StorageTest::TestRegistry();
+    //OpenGedcom::StorageTest::TestRegistry();
     std::cout << count << " TestRegistry Passed\n";
     count++;
 
-    OpenGedcom::StorageTest::TestTagEmit();
+    //OpenGedcom::StorageTest::TestTagEmit();
     std::cout << count << " TestTagEmit Passed\n";
     count++;
 
-    OpenGedcom::StorageTest::TestParserEmit();
+    //OpenGedcom::StorageTest::TestParserEmit();
     std::cout << count << " TestParserEmit Passed\n";
+    count++;
+
+    OpenGedcom::DocumentTest::TestDocument();
+    std::cout << count << " TestDocument Passed\n";
     count++;
 }

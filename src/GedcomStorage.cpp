@@ -2,41 +2,45 @@
 // SPDX-License-Identifier: MIT
 
 #include <OpenGedcom/GedcomStorage.h>
+#include <iostream>
 
 namespace OpenGedcom {
     void GedcomStorage::Emit(int level, std::optional<uint32_t> xref, std::string_view tagName, std::string_view value) {
+        TagType type = m_registry.Find(std::string(tagName));
 
-        // create tag
-        auto tag = m_registry.Create(std::string{tagName}, std::string{value});
-        GedcomTag* tagPtr = tag.get();
-        m_tags.push_back(std::move(tag));
+        std::unique_ptr<GedcomTag> tag;
 
-        // create node
-        auto node = std::make_unique<GedcomNode>();
-        node->tag = tagPtr;
-
-        GedcomNode* nodePtr = node.get();
-        m_nodes.push_back(std::move(node));
-
-        // adjust the stack
-        if(level >= static_cast<int>(m_levelStack.size())) {
-            m_levelStack.resize(level + 1, nullptr);
+        if(type != INVALID_TAG) {
+            tag = m_registry.Create(std::string(tagName), std::string(value));
         }
-
+        else {
+            std::cout << "Emitted INVALID_TAG: " << tagName << '\n';
+            tag = std::make_unique<GedcomTag>(value);
+            tag->SetType(INVALID_TAG);
+        }
+        
+        // create tag
+        GedcomTag* tagPtr = tag.get();
+        
+        if(level >= static_cast<int>(m_stack.size())) {
+            m_stack.resize(level + 1, nullptr);
+        }
+        
         if(level == 0) {
-            m_roots.push_back(nodePtr);
-            nodePtr->parent = nullptr;
-
-            if(xref != std::nullopt) {
-                nodePtr->ref.id = xref.value(); 
+            m_tags.push_back(std::move(tag));
+            if(auto* record = dynamic_cast<RecordTag*>(tagPtr)) {
+                if(xref != std::nullopt) {
+                    record->SetId(xref.value());
+                }
             }
         }
         else {
-            GedcomNode* parent = m_levelStack[level - 1];
-            nodePtr->parent = parent;
-            parent->children.push_back(nodePtr);
+            GedcomTag* parent = m_stack[level - 1];
+            
+            tagPtr->SetParent(parent);
+            parent->Children().push_back(std::move(tag));
         }
-
-        m_levelStack[level] = nodePtr;
+        
+        m_stack[level] = tagPtr;
     }
 }

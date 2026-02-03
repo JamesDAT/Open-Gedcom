@@ -3,10 +3,10 @@
 
 
 #pragma once
+#include <cstdint>
 #include <filesystem>
 
 #include "GedcomViews.h"
-#include "GedcomObject.h"
 #include "GedcomStorage.h"
 
 namespace OpenGedcom {
@@ -26,7 +26,7 @@ namespace OpenGedcom {
         Document(Document&&) noexcept;
         Document& operator=(Document&&) noexcept;
 
-        //IndividualView Individual(EntityID id);
+        std::optional<IndividualView> Individual(uint32_t id);
         //FamilyView Family(EntityID id);
 
         //bool HasIndividual(EntityID id) const noexcept;
@@ -48,6 +48,7 @@ namespace OpenGedcom {
 
         //void SaveFile(const std::filesystem::path& path) const;
 
+        GedcomStorage& Storage() { return m_storage; }
     private:
 
         // storage

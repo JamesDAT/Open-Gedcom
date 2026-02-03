@@ -1,10 +1,18 @@
 // Copyright (c) 2026 James Hayden
 // SPDX-License-Identifier: MIT
 
+/// The registry provides a way for tags to be registered within the OpenGedcom system. It stores 3 things for each tag,
+/// it stores a string literal as it would appear in the gedcom file like "INDI", it stores a type, this must be a class
+/// derived from a GedcomTag, it also stores an ID which is just an integer identifier for type checking, it begins at 1
+/// and counts up for every tag registered. Types defined in the GedcomBuiltin.h tuple are registered upon construction
+/// automatically.
+
 #pragma once
 
 #include "GedcomObject.h"
+#include "GedcomBuiltin.h"
 
+#include <concepts>
 #include <functional>
 #include <string_view>
 #include <typeindex>
@@ -16,12 +24,19 @@ namespace OpenGedcom {
     template<typename T>
     concept GedcomTagType =
         std::derived_from<T, GedcomTag> &&
+        requires {
+            { T::TagName } -> std::convertible_to<std::string_view>;
+        } &&
         std::constructible_from<T, std::string_view>;
 
-    /// TagRegistry stores the string code for the tag, and a function reference for how to construct that tag
-    /// all tags derive from GedcomTag
     class TagRegistry {
     public:
+        TagRegistry() {
+            RegisterBuiltinTags(std::type_identity<BuiltinTags>{});
+        }
+
+        ~TagRegistry() = default;
+
         template<GedcomTagType T>
         TagType RegisterTag(const std::string& tagName) {
             auto it = m_registry.find(tagName);
@@ -35,7 +50,6 @@ namespace OpenGedcom {
                         TagEntry{
                             .id = id,
                             .creator = &CreateTag<T>,
-                            .type = std::type_index(typeid(T))
                         }
                     );
 
@@ -83,15 +97,19 @@ namespace OpenGedcom {
             return IsType<T>(tag) ? static_cast<T*>(tag) : nullptr;
         }
 
+        template<typename T>
+        TagType TypeId() const {
+            return T::TypeId;
+        }
+
     private:
-        TagType m_nextID = 1; // INVALID_TAG begins at 0
+        TagType m_nextID = 1; // INVALID_TAG is 0
 
         using Creator = std::unique_ptr<GedcomTag>(*)(std::string_view);
 
         struct TagEntry {
             TagType id;
             Creator creator;
-            std::type_index type;
         };
 
         std::unordered_map<std::string, TagEntry, std::hash<std::string>, std::equal_to<>> m_registry;
@@ -101,5 +119,11 @@ namespace OpenGedcom {
         static std::unique_ptr<GedcomTag> CreateTag(std::string_view value) {
             return std::make_unique<T>(value);
         }
+
+        template<typename... Tags>
+        void RegisterBuiltinTags(std::type_identity<std::tuple<Tags...>>) {
+            (RegisterTag<Tags>(std::string(Tags::TagName)), ...);
+        }
+
     };
 }

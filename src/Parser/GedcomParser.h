@@ -16,7 +16,7 @@ namespace OpenGedcom {
         void Parse();
 
     private:
-        GedcomReader m_reader{};
+        GedcomReader m_reader;
         GedcomStorage& m_storage;
         std::filesystem::path m_path;
 

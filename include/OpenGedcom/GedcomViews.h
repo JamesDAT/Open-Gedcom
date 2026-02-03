@@ -1,6 +1,10 @@
 // Copyright (c) 2025 James Hayden
 // SPDX-License-Identifier: MIT
 
+/// Gedcom views are meant as the primary axis for interacting with the internal gedcom objects.
+/// The views aim to provide mechanisms to gain views to any relavent information on a tag. For instance Age() of a INDI tag
+/// Failing this views provide a fallback to gain a pointer into the node storage, so tags can be manually found
+
 #pragma once
 #include "GedcomObject.h"
 
@@ -11,16 +15,16 @@
 namespace OpenGedcom {
     class TagView {
     public:
-        TagView(GedcomNode* tag)
+        TagView(GedcomTag* tag)
             : m_data(tag) {}
 
         ~TagView() = default;
 
-        const GedcomNode* Node() const;
-        GedcomNode* Data();
+        const GedcomTag* Tag() const;
+        GedcomTag* Data();
 
     protected:
-        GedcomNode* m_data;
+        GedcomTag* m_data;
     };
 
 
