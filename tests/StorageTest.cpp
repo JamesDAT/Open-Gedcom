@@ -9,8 +9,8 @@
 namespace OpenGedcom {
     void StorageTest::TestRegistry() {
         TagRegistry registry{};
-        auto tag = registry.Create("INDI", "This Name");
-        
+        auto tag = registry.Create("INDI");
+        tag.SetValue("Hello, World!");
     }
 
     void StorageTest::TestTagEmit() {

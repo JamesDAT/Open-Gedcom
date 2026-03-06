@@ -8,6 +8,6 @@ namespace OpenGedcom {
     static void TestDocument();
 
     private:
-        static void PrintChildren(GedcomTag* tag);
+        static void PrintChildren(const GedcomNode* tag);
     };
 }

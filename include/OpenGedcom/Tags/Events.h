@@ -10,8 +10,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "BIRT";
 
-        explicit BirthTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -20,8 +19,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "DEAT";
 
-        explicit DeathTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -30,8 +28,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "MARR";
 
-        explicit MarriageTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -40,8 +37,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "BURI";
 
-        explicit BurriedTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -50,8 +46,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "EVEN";
 
-        explicit EventTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -60,8 +55,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "ORDN";
 
-        explicit OrdinationTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -70,8 +64,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "IMMI";
 
-        explicit ImmigrationTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -80,8 +73,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "EMIG";
 
-        explicit EmigrationTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -90,8 +82,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "WILL";
 
-        explicit WillTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -100,8 +91,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "ADOP";
 
-        explicit AdoptionTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -110,8 +100,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "BAPM";
 
-        explicit BaptismTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -120,8 +109,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "BARM";
 
-        explicit BarMitzvahTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -130,8 +118,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "BASM";
 
-        explicit BasMitzvahTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -140,8 +127,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "BLES";
 
-        explicit BlessingTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -150,8 +136,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "CHRA";
 
-        explicit AdultChristeningTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -160,8 +145,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "CHR";
 
-        explicit ChristeningTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -170,8 +154,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "CONF";
 
-        explicit ConfirmationTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -180,8 +163,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "CONL";
 
-        explicit ConfirmationLdsTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -190,8 +172,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "CREM";
 
-        explicit CremationTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -200,8 +181,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "ENGA";
 
-        explicit EngagementTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -210,8 +190,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "NATU";
 
-        explicit NaturalizationTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -220,8 +199,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "PROB";
 
-        explicit ProbateTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -230,8 +208,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "RETI";
 
-        explicit RetirementTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 }

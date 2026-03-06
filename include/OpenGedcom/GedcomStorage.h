@@ -18,8 +18,8 @@ namespace OpenGedcom {
         GedcomStorage& operator=(const GedcomStorage&) = delete;
 
         // allow move
-        GedcomStorage(GedcomStorage&&) = default;
-        GedcomStorage& operator=(GedcomStorage&&) = default;
+        GedcomStorage(GedcomStorage&&) noexcept = default;
+        GedcomStorage& operator=(GedcomStorage&&) noexcept = default;
 
         // access the registry
         TagRegistry& Registry() { return m_registry; }
@@ -27,16 +27,26 @@ namespace OpenGedcom {
 
         // parser emit function
         void Emit(int level, std::optional<uint32_t> xref, std::string_view tag, std::string_view value);
+        void Emit(int level, std::optional<uint32_t> xref, std::string_view tag, std::size_t valIndex, std::size_t valSize);
 
-        const std::vector<std::unique_ptr<GedcomTag>>& Graph() const { return m_tags; }
-        std::vector<std::unique_ptr<GedcomTag>>& Graph() { return m_tags; }
+        // indicates the current emit stream is finished
+        void Flush();
+
+        const std::vector<GedcomNode>& Graph() const { return m_tags; }
+        std::vector<GedcomNode>& Graph() { return m_tags; }
 
     private:
+        void Emit(int level, std::optional<uint32_t> xref, GedcomNode& node);
+
+        // TODO: Split storage model to separate Indi, Family etc. 
+        // cache locality between different types is not necessary,
+        // pre checking these types also gets rid of type checking at search
+
         // storage ownership
-        std::vector<std::unique_ptr<GedcomTag>> m_tags;
+        std::vector<GedcomNode> m_tags;
 
         // stack
-        std::vector<GedcomTag*> m_stack;
+        std::vector<GedcomNode*> m_stack;
 
         TagRegistry m_registry;
     };

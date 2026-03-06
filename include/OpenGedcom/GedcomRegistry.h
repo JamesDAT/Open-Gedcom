@@ -23,11 +23,7 @@
 namespace OpenGedcom {
     template<typename T>
     concept GedcomTagType =
-        std::derived_from<T, GedcomTag> &&
-        requires {
-            { T::TagName } -> std::convertible_to<std::string_view>;
-        } &&
-        std::constructible_from<T, std::string_view>;
+        std::derived_from<T, GedcomTag>;
 
     class TagRegistry {
     public:
@@ -41,16 +37,13 @@ namespace OpenGedcom {
         TagType RegisterTag(const std::string& tagName) {
             auto it = m_registry.find(tagName);
                     if (it != m_registry.end())
-                        return it->second.id;
+                        return it->second;
 
                     TagType id = m_nextID++;
 
                     m_registry.emplace(
                         std::string(tagName),
-                        TagEntry{
-                            .id = id,
-                            .creator = &CreateTag<T>,
-                        }
+                        id
                     );
 
                     m_typeToId.emplace(std::type_index(typeid(T)), id);
@@ -58,43 +51,38 @@ namespace OpenGedcom {
                     return id;
         }
 
-        std::unique_ptr<GedcomTag> Create(const std::string& tagName, const std::string& value) const {
+        GedcomNode Create(const std::string& tagName) const {
             auto it = m_registry.find(tagName);
             if (it == m_registry.end()) {
                 // unknown tag fallback
-                auto tag = std::make_unique<GedcomTag>(value);
-                tag->SetType(INVALID_TAG);
-                return tag;
+                GedcomNode node{};
+                node.SetType(INVALID_TAG);
+                return node;
             }
 
-            auto tag = it->second.creator(value);
-            tag->SetType(it->second.id);
-            return tag;
+            GedcomNode node{};
+            node.SetType(it->second);
+            return node;
         }
 
         TagType Find(const std::string& tagName) const {
             if (auto it = m_registry.find(tagName); it != m_registry.end())
-                return it->second.id;
+                return it->second;
             return INVALID_TAG;
         }
 
-        bool IsType(const GedcomTag* tag, const std::string& tagName) {
+        bool IsType(const GedcomNode& tag, const std::string& tagName) {
             TagType type = Find(tagName);
-            return tag->Type() == type;
+            return tag.Type() == type;
         }
 
         template<GedcomTagType T>
-        bool IsType(const GedcomTag* tag) const {
+        bool IsType(const GedcomNode& tag) const {
             auto it = m_typeToId.find(std::type_index(typeid(T)));
             if(it == m_typeToId.end())
                 return false;
 
-            return tag->Type() == it->second;
-        }
-
-        template<GedcomTagType T>
-        T* As(GedcomTag* tag) const {
-            return IsType<T>(tag) ? static_cast<T*>(tag) : nullptr;
+            return tag.Type() == it->second;
         }
 
         template<typename T>
@@ -105,14 +93,7 @@ namespace OpenGedcom {
     private:
         TagType m_nextID = 1; // INVALID_TAG is 0
 
-        using Creator = std::unique_ptr<GedcomTag>(*)(std::string_view);
-
-        struct TagEntry {
-            TagType id;
-            Creator creator;
-        };
-
-        std::unordered_map<std::string, TagEntry, std::hash<std::string>, std::equal_to<>> m_registry;
+        std::unordered_map<std::string, TagType, std::hash<std::string>, std::equal_to<>> m_registry;
         std::unordered_map<std::type_index, TagType> m_typeToId;
 
         template<typename T>

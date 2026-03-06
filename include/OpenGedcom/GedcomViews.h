@@ -15,16 +15,16 @@
 namespace OpenGedcom {
     class TagView {
     public:
-        TagView(GedcomTag* tag)
+        TagView(GedcomNode* tag)
             : m_data(tag) {}
 
         ~TagView() = default;
 
-        const GedcomTag* Tag() const;
-        GedcomTag* Data();
+        const GedcomNode* Tag() const;
+        GedcomNode* Data();
 
     protected:
-        GedcomTag* m_data;
+        GedcomNode* m_data;
     };
 
 
@@ -60,6 +60,8 @@ namespace OpenGedcom {
 
     class IndividualView : public TagView {
     public:
+        using TagView::TagView;
+
         std::string_view Given() const;
         std::string_view Surname() const;
         std::optional<std::string_view> Age() const;

@@ -10,8 +10,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "UID";
 
-        explicit UIDTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -20,8 +19,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "REFN";
 
-        explicit RefTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -30,8 +28,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "EXID";
 
-        explicit ExternalIdTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -40,8 +37,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "NAME";
 
-        explicit NameTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -50,8 +46,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "NPFX";
 
-        explicit NamePrefixTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -60,8 +55,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "GIVN";
 
-        explicit GivenNamesTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -70,8 +64,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "SURN";
 
-        explicit SurnameTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -80,7 +73,6 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "TYPE";
 
-        explicit TypeTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 }

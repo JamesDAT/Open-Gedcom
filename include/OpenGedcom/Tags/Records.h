@@ -12,12 +12,8 @@ namespace OpenGedcom {
     class RecordTag : public GedcomTag {
     public:
         using GedcomTag::GedcomTag;
-
-        uint32_t Id() const { return m_id; }
-        void SetId(uint32_t id) { m_id = id; }
-
-    private:
-        uint32_t m_id;
+        virtual ~RecordTag() = default;
+        
     };
 
 
@@ -26,8 +22,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "HEAD";
 
-        explicit HeadTag(std::string_view value)
-            : RecordTag(value) {}
+        using RecordTag::RecordTag;
     };
 
 
@@ -36,8 +31,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "TRLR";
 
-        explicit TrailerTag(std::string_view value)
-            : RecordTag(value) {}
+        using RecordTag::RecordTag;
     };
 
 
@@ -46,8 +40,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "INDI";
 
-        explicit IndiTag(std::string_view value)
-            : RecordTag(value) {}
+        using RecordTag::RecordTag;
     };
 
 
@@ -56,8 +49,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "FAM";
 
-        explicit FamilyTag(std::string_view value)
-            : RecordTag(value) {}
+        using RecordTag::RecordTag;
     };
 
 
@@ -66,8 +58,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "SOUR";
 
-        explicit SourceTag(std::string_view value)
-            : RecordTag(value) {}
+        using RecordTag::RecordTag;
     };
 
 
@@ -76,8 +67,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "REPO";
 
-        explicit RepoTag(std::string_view value)
-            : RecordTag(value) {}
+        using RecordTag::RecordTag;
     };
 
 
@@ -86,8 +76,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "SUBM";
 
-        explicit SubmitterTag(std::string_view value)
-            : RecordTag(value) {}
+        using RecordTag::RecordTag;
     };
 
 
@@ -96,8 +85,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "OBJE";
 
-        explicit ObjectTag(std::string_view value)
-            : RecordTag(value) {}
+        using RecordTag::RecordTag;
     };
 
 
@@ -106,7 +94,6 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "SNOTE";
 
-        explicit SharedNoteTag(std::string_view value)
-            : RecordTag(value) {}
+        using RecordTag::RecordTag;
     };
 }

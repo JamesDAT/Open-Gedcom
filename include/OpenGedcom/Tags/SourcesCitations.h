@@ -10,8 +10,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "PAGE";
 
-        explicit PageTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -20,8 +19,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "CALN";
 
-        explicit CallTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -30,8 +28,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "DATA";
 
-        explicit DataTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -40,8 +37,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "AGNC";
 
-        explicit AgencyTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -50,8 +46,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "TITL";
 
-        explicit TitleTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -60,8 +55,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "ABBR";
 
-        explicit AbbreviationTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -70,8 +64,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "AUTH";
 
-        explicit AuthorTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -80,7 +73,6 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "PUBL";
 
-        explicit PublicationTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 }

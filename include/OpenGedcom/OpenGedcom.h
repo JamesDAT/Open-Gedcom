@@ -15,7 +15,7 @@ namespace OpenGedcom {
     public:
         /// @brief Read and parse a Gedcom file into the OpenGedcom Document format.
         /// @param path 
-        static Document ParseFile(const std::filesystem::path& path);
+        static Document ParseFile(const std::filesystem::path& path, bool lazyLoad = true);
 
         Document();
         ~Document();

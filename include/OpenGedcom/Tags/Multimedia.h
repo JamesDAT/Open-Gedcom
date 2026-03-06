@@ -10,8 +10,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "FILE";
 
-        explicit FileTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -20,8 +19,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "MEDI";
 
-        explicit MediaTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -30,8 +28,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "WIDTH";
 
-        explicit WidthTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -40,8 +37,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "HEIGHT";
 
-        explicit HeightTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -50,8 +46,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "LEFT";
 
-        explicit LeftTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -60,7 +55,6 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "TOP";
 
-        explicit TopTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 }

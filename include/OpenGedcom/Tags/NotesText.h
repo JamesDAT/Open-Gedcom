@@ -10,8 +10,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "TEXT";
 
-        explicit TextTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -20,8 +19,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "NOTE";
 
-        explicit NoteTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -30,8 +28,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "TRAN";
 
-        explicit TranslationTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -40,7 +37,6 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "CHAN";
 
-        explicit ChangeTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 }

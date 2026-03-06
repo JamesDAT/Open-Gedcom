@@ -10,8 +10,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "GEDC";
 
-        explicit GedcTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -20,8 +19,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "LANG";
 
-        explicit LanguageTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -30,8 +28,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "SCHMA";
 
-        explicit SchemaTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -40,8 +37,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "VERS";
 
-        explicit VersionTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -50,8 +46,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "CHAR";
 
-        explicit CharacterTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -60,8 +55,7 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "CORP";
 
-        explicit CorporateTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 
 
@@ -70,7 +64,6 @@ namespace OpenGedcom {
     public:
         static constexpr std::string_view TagName = "COPR";
 
-        explicit CopyrightTag(std::string_view value)
-            : GedcomTag(value) {}
+        using GedcomTag::GedcomTag;
     };
 }

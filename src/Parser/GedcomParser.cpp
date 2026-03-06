@@ -19,6 +19,8 @@ namespace OpenGedcom {
             ParseGedcomLine(line.value());
             line = m_reader.ReadLine();
         }
+
+        m_storage.Flush();
     }
 
     void GedcomParser::ParseGedcomLine(std::string_view line) {

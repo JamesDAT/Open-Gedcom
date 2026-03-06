@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <OpenGedcom/OpenGedcom.h>
+#include <iostream>
 #include "OpenGedcom/GedcomObject.h"
 #include "Parser/GedcomParser.h"
 
@@ -10,7 +11,7 @@ namespace OpenGedcom {
 
     Document::~Document() = default;
 
-    Document Document::ParseFile(const std::filesystem::path &path) {
+    Document Document::ParseFile(const std::filesystem::path &path, bool lazyLoad) {
         GedcomStorage storage;
         GedcomParser parser{path, storage};
         parser.Parse();
@@ -22,10 +23,10 @@ namespace OpenGedcom {
     }
 
     std::optional<IndividualView> Document::Individual(uint32_t id) {
-        for(const auto& tag : m_storage.Graph()) {
-            if(auto indi = m_storage.Registry().As<IndiTag>(tag.get())) {
-                if(indi->Id() == id) {
-                    IndividualView individual{indi};
+        for(auto& tag : m_storage.Graph()) {
+            if(m_storage.Registry().IsType<IndiTag>(tag)) {
+                if(tag.GetId() == id) {
+                    IndividualView individual{&tag};
                     return individual;
                 }
             }
