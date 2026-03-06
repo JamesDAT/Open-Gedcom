@@ -23,6 +23,10 @@ set(Parser_Files
     src/Parser/GedcomParser.cpp
 )
 
+set(Views_Files
+    src/Views/IndividualView.cpp
+)
+
 target_sources(OpenGedcom
     PUBLIC
         ${PUBLIC_INCLUDE}/OpenGedcom.h
@@ -36,7 +40,7 @@ target_sources(OpenGedcom
 
         ${Reader_Files}
         ${Parser_Files}
-        
+        ${Views_Files}
 )
 
 target_include_directories(OpenGedcom

@@ -10,7 +10,7 @@
 namespace OpenGedcom {
     class GedcomParser {
     public:
-        GedcomParser(const std::filesystem::path& path, GedcomStorage& storage);
+        GedcomParser(const std::filesystem::path& path, GedcomStorage& storage, bool lazyLoad);
         ~GedcomParser();
 
         void Parse();
@@ -19,6 +19,7 @@ namespace OpenGedcom {
         GedcomReader m_reader;
         GedcomStorage& m_storage;
         std::filesystem::path m_path;
+        const bool m_lazyLoad;
 
         inline void ParseGedcomLine(std::string_view line);
     };

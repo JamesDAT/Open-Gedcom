@@ -13,7 +13,7 @@ namespace OpenGedcom {
 
     Document Document::ParseFile(const std::filesystem::path &path, bool lazyLoad) {
         GedcomStorage storage;
-        GedcomParser parser{path, storage};
+        GedcomParser parser{path, storage, lazyLoad};
         parser.Parse();
 
         Document doc;

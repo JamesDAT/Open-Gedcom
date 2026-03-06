@@ -5,8 +5,8 @@
 #include <optional>
 
 namespace OpenGedcom {
-    GedcomParser::GedcomParser(const std::filesystem::path& path, GedcomStorage& storage) :
-        m_path(path), m_storage(storage), m_reader(path)
+    GedcomParser::GedcomParser(const std::filesystem::path& path, GedcomStorage& storage, bool lazyLoad) :
+        m_path(path), m_storage(storage), m_reader(path), m_lazyLoad(lazyLoad)
     {
         
     }
@@ -45,36 +45,36 @@ namespace OpenGedcom {
 
         // xref
         if (it != end && *it == '@') {
-        ++it; // skip the initial '@'
-        auto idBegin = it;
+            ++it; // skip the initial '@'
+            auto idBegin = it;
 
-        // advance until the closing '@' or end
-        while (it != end && *it != '@') {
-            ++it;
-        }
+            // advance until the closing '@' or end
+            while (it != end && *it != '@') {
+                ++it;
+            }
 
-        // convert the digits between idBegin and it to an integer
-        if (it != idBegin) {
-            xrefId = 0;
-            for (auto iter = idBegin; iter != it; ++iter) {
-                if (*iter >= '0' && *iter <= '9') {
-                    xrefId = xrefId.value() * 10 + (*iter - '0');
-                } else {
-                    // invalid character, emit error for now
-                    //throw std::runtime_error("Invalid Character in xref");
+            // convert the digits between idBegin and it to an integer
+            if (it != idBegin) {
+                xrefId = 0;
+                for (auto iter = idBegin; iter != it; ++iter) {
+                    if (*iter >= '0' && *iter <= '9') {
+                        xrefId = xrefId.value() * 10 + (*iter - '0');
+                    } else {
+                        // invalid character, emit error for now
+                        //throw std::runtime_error("Invalid Character in xref");
+                    }
                 }
             }
-        }
 
-        if (it != end && *it == '@') {
-            ++it; // skip the closing '@'
-        }
+            if (it != end && *it == '@') {
+                ++it; // skip the closing '@'
+            }
 
-        // skip any space after the xref
-        if (it != end && *it == ' ') {
-            ++it;
+            // skip any space after the xref
+            if (it != end && *it == ' ') {
+                ++it;
+            }
         }
-    }
 
         // Tag
         auto tagBegin = it;
