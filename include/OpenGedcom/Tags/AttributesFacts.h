@@ -60,7 +60,7 @@ namespace OpenGedcom {
 
 
 
-    class ResidanceTag final : public GedcomTag {
+    class ResidenceTag final : public GedcomTag {
     public:
         static constexpr std::string_view TagName = "RESI";
 

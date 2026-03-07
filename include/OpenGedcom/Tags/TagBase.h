@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
+#include "TagTraits.h"
+
 #include <cstdint>
 #include <vector>
 #include <string>
@@ -23,6 +25,8 @@ namespace OpenGedcom {
     public:
         GedcomTag() = default;
         virtual ~GedcomTag() = default;
+
+        static constexpr TagTraits Traits = TagTraits::None;
     };
 
     class GedcomNode final {

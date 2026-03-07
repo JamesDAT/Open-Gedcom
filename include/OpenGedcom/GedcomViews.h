@@ -7,6 +7,7 @@
 
 #pragma once
 #include "GedcomObject.h"
+#include "GedcomRegistry.h"
 
 #include <optional>
 #include <string_view>
@@ -15,21 +16,28 @@
 namespace OpenGedcom {
     class TagView {
     public:
-        TagView(GedcomNode* tag)
-            : m_data(tag) {}
+        TagView(GedcomNode* tag, TagRegistry* registry)
+            : m_data(tag), m_registry(registry) {}
 
-        ~TagView() = default;
+        virtual ~TagView() = default;
 
-        const GedcomNode* Tag() const;
-        GedcomNode* Data();
+        const GedcomNode& Tag() const { return *m_data; }
+        GedcomNode* Data() { return m_data; };
+        const GedcomNode* Data() const { return m_data; }
+
+        TagRegistry* Registry() { return m_registry; }
+        const TagRegistry* Registry() const { return m_registry; }
+
 
     protected:
         GedcomNode* m_data;
+        TagRegistry* m_registry;
     };
-
 
     class DateView : public TagView {
     public:
+        using TagView::TagView;
+        
         std::string_view Date() const;
         std::optional<std::string_view> Time() const;
 
@@ -39,6 +47,8 @@ namespace OpenGedcom {
 
     class OccupationView : public TagView {
     public:
+        using TagView::TagView;
+
         std::optional<DateView> Date() const;
         std::optional<std::string_view> Place() const;
 
@@ -47,10 +57,12 @@ namespace OpenGedcom {
 
     class AddressView : public TagView {
     public:
-        std::optional<std::string_view> County();
-        std::optional<std::string_view> State();
-        std::optional<std::string_view> City();
-        std::optional<std::string_view> Address();
+        using TagView::TagView;
+
+        std::optional<std::string_view> County() const;
+        std::optional<std::string_view> State() const;
+        std::optional<std::string_view> City() const;
+        std::optional<std::string_view> Address() const;
 
         void SetCountry(std::string_view country);
         void SetState(std::string_view state);
@@ -58,23 +70,26 @@ namespace OpenGedcom {
         void SetAddress(std::string_view address);
     };
 
+    class EventView : TagView {
+    public:
+        using TagView::TagView;
+        
+        std::optional<AddressView> Address() const;
+        std::optional<DateView> Date() const;
+    };
+
     class IndividualView : public TagView {
     public:
         using TagView::TagView;
 
-        std::string_view Given() const;
-        std::string_view Surname() const;
-        std::optional<std::string_view> Age() const;
+        std::optional<std::string_view> Given() const;
+        std::optional<std::string_view> Surname() const;
         std::optional<char> Sex() const;
-        std::optional<int> ID() const;
+        std::optional<uint32_t> ID() const;
 
         std::vector<OccupationView> Occupations() const;
-        std::vector<AddressView> Addresses() const;
-
-        std::vector<IndividualView> Children() const;
-        std::vector<IndividualView> Spouses() const;
-
-        std::vector<TagView> TagChildren() const;
+        std::vector<AddressView> Residence() const;
+        std::vector<EventView> Events() const;
 
 
         void SetGiven(std::string_view given);

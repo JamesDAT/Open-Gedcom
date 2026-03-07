@@ -11,6 +11,7 @@
 
 #include "GedcomObject.h"
 #include "GedcomBuiltin.h"
+#include "Tags/TagTraits.h"
 
 #include <concepts>
 #include <functional>
@@ -34,16 +35,16 @@ namespace OpenGedcom {
         ~TagRegistry() = default;
 
         template<GedcomTagType T>
-        TagType RegisterTag(const std::string& tagName) {
+        TagType RegisterTag(const std::string& tagName, TagTraits traits) {
             auto it = m_registry.find(tagName);
                     if (it != m_registry.end())
-                        return it->second;
+                        return it->second.id;
 
                     TagType id = m_nextID++;
 
                     m_registry.emplace(
                         std::string(tagName),
-                        id
+                        TagInfo{id, traits}
                     );
 
                     m_typeToId.emplace(std::type_index(typeid(T)), id);
@@ -61,13 +62,13 @@ namespace OpenGedcom {
             }
 
             GedcomNode node{};
-            node.SetType(it->second);
+            node.SetType(it->second.id);
             return node;
         }
 
         TagType Find(const std::string& tagName) const {
             if (auto it = m_registry.find(tagName); it != m_registry.end())
-                return it->second;
+                return it->second.id;
             return INVALID_TAG;
         }
 
@@ -82,7 +83,12 @@ namespace OpenGedcom {
             if(it == m_typeToId.end())
                 return false;
 
-            return tag.Type() == it->second;
+            return tag.Type() == it->second.id;
+        }
+
+        template<typename T>
+        TagTraits TagTrait() const {
+            return T::TagTrait;
         }
 
         template<typename T>
@@ -93,8 +99,13 @@ namespace OpenGedcom {
     private:
         TagType m_nextID = 1; // INVALID_TAG is 0
 
-        std::unordered_map<std::string, TagType, std::hash<std::string>, std::equal_to<>> m_registry;
-        std::unordered_map<std::type_index, TagType> m_typeToId;
+        struct TagInfo {
+            TagType id;
+            TagTraits traits;
+        };
+
+        std::unordered_map<std::string, TagInfo, std::hash<std::string>, std::equal_to<>> m_registry;
+        std::unordered_map<std::type_index, TagInfo> m_typeToId;
 
         template<typename T>
         static std::unique_ptr<GedcomTag> CreateTag(std::string_view value) {
@@ -103,7 +114,7 @@ namespace OpenGedcom {
 
         template<typename... Tags>
         void RegisterBuiltinTags(std::type_identity<std::tuple<Tags...>>) {
-            (RegisterTag<Tags>(std::string(Tags::TagName)), ...);
+            (RegisterTag<Tags>(std::string(Tags::TagName), TagTraits(Tags::Traits)), ...);
         }
 
     };

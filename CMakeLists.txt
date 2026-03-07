@@ -37,6 +37,7 @@ target_sources(OpenGedcom
         src/OpenGedcom.cpp
         src/GedcomStorage.cpp
         src/Tests.h
+        src/TagTraversal.h
 
         ${Reader_Files}
         ${Parser_Files}

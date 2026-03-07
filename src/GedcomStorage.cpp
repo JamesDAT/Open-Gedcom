@@ -8,14 +8,16 @@ namespace OpenGedcom {
     void GedcomStorage::Emit(int level, std::optional<uint32_t> xref, std::string_view tagName, std::string_view value) {
         GedcomNode node = m_registry.Create(std::string(tagName));
         node.SetValue(value);
+        Emit(level, xref, std::move(node));
     }
 
     void GedcomStorage::Emit(int level, std::optional<uint32_t> xref, std::string_view tagName, std::size_t valIndex, std::size_t valSize) {
         GedcomNode node = m_registry.Create(std::string(tagName));
         node.SetValue(valIndex, valSize);
+        Emit(level, xref, std::move(node));
     }
 
-    void GedcomStorage::Emit(int level, std::optional<uint32_t> xref, GedcomNode& node) {
+    void GedcomStorage::Emit(int level, std::optional<uint32_t>& xref, GedcomNode&& node) {
         GedcomNode* tagPtr = &node;
         
         if(level >= static_cast<int>(m_stack.size())) {

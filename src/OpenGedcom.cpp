@@ -13,7 +13,7 @@ namespace OpenGedcom {
 
     Document Document::ParseFile(const std::filesystem::path &path, bool lazyLoad) {
         GedcomStorage storage;
-        GedcomParser parser{path, storage, lazyLoad};
+        GedcomParser parser{path, storage, false};
         parser.Parse();
 
         Document doc;
@@ -26,7 +26,7 @@ namespace OpenGedcom {
         for(auto& tag : m_storage.Graph()) {
             if(m_storage.Registry().IsType<IndiTag>(tag)) {
                 if(tag.GetId() == id) {
-                    IndividualView individual{&tag};
+                    IndividualView individual{&tag, &m_storage.Registry()};
                     return individual;
                 }
             }

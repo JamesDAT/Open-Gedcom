@@ -19,12 +19,14 @@ namespace OpenGedcom {
         std::cout << "Elapsed: " << duration.count() << " milliseconds\n";
 
         if(auto view = doc.Individual(1)) {
-            std::cout << "Obtained View" << '\n';
+            std::cout << "Obtained Indi View" << '\n';
+            std::cout << "Indi Given Name: " << view->Given().value() << '\n';
+            std::cout << "Indi Surname: " << view->Surname().value() << '\n';
+            std::cout << "Resi Count: " << view->Residence().size() << '\n';
+            std::cout << "Occu Count: " << view->Occupations().size() << '\n';
         }
 
-        //for(auto& record : graph) {
-            //PrintChildren(record.get());
-        //}
+        
     }
 
     void DocumentTest::PrintChildren(const GedcomNode* tag) {

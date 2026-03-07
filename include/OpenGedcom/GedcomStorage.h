@@ -36,7 +36,7 @@ namespace OpenGedcom {
         std::vector<GedcomNode>& Graph() { return m_tags; }
 
     private:
-        void Emit(int level, std::optional<uint32_t> xref, GedcomNode& node);
+        void Emit(int level, std::optional<uint32_t>& xref, GedcomNode&& node);
 
         // TODO: Split storage model to separate Indi, Family etc. 
         // cache locality between different types is not necessary,

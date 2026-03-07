@@ -91,7 +91,7 @@ namespace OpenGedcom {
         SexTag,
         RoleTag,
         StatusTag,
-        ResidanceTag,
+        ResidenceTag,
         NationalityTag,
         NumChildrenTag,
         NumMarriagesTag,

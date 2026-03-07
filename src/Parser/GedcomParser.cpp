@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 #include "GedcomParser.h"
+#include <iostream>
 #include <optional>
 
 namespace OpenGedcom {
