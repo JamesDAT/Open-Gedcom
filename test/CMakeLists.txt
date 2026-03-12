@@ -1,5 +1,6 @@
 add_executable(OpenGedcomTests
     test.cpp
+    SimpleReader.hpp
 )
 
 target_link_libraries(OpenGedcomTests

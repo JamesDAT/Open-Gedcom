@@ -9,7 +9,8 @@ add_library(OpenGedcom::OpenGedcom ALIAS OpenGedcom)
 set(PUBLIC_INCLUDE include/OpenGedcom)
 
 set(Parser_Files
-    
+    src/Parser/Parser.hpp
+    src/Parser/Parser.cpp
 )
 
 set(Views_Files
@@ -19,9 +20,16 @@ set(Views_Files
 target_sources(OpenGedcom
     PUBLIC
         ${PUBLIC_INCLUDE}/OpenGedcom.hpp
+        ${PUBLIC_INCLUDE}/IReader.hpp
+
+        ${PUBLIC_INCLUDE}/Internal/OpenGedcom.ipp
+        ${PUBLIC_INCLUDE}/Internal/Registry.hpp
+        ${PUBLIC_INCLUDE}/Internal/Storage.hpp
 
     PRIVATE
         src/OpenGedcom.cpp
+
+        ${Parser_Files}
 )
 
 target_include_directories(OpenGedcom

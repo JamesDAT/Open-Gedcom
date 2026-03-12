@@ -29,5 +29,5 @@ cmake .. \
 
 cmake --build .
 
-./tests/OpenGedcomTests
+./test/OpenGedcomTests
 
