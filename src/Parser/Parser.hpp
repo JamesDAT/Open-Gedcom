@@ -13,28 +13,42 @@
  */
 
 #pragma once
+#include "OpenGedcom/Internal/Storage.hpp"
+#include "OpenGedcom/Internal/Registry.hpp"
 
 // std
 #include <cstddef>
+#include <cstdint>
 #include <string_view>
 #include <vector>
 
 namespace OpenGedcom::Internal {
     class Parser {
     public:
-        Parser();
+        Parser(Storage* storage, Registry* registry, bool makeCopies);
         ~Parser();
 
         void Parse(const std::string_view data);
 
     private:
-        std::vector<std::size_t> m_lineInfo{};
-        std::size_t m_recordCount = 0;
-
         void ParseLine(const std::string_view data);
 
-        inline std::size_t EstimateLineCount(std::size_t bytes) const {
+        inline size_t EstimateLineCount(size_t bytes) const {
             return bytes / 32 + 8; // rough estimate of 32 bytes per line on average
         }
+
+        inline size_t EstimateStorageSize(size_t dataSize) const {
+            return dataSize / 2; // gedcom files are roughly 50% useful data
+        }
+
+
+        Storage* m_storage;
+        Registry* m_registry;
+
+        const bool m_makeCopies;
+
+        std::vector<uint32_t> m_lineInfo{};
+        size_t m_recordCount = 0; // used to reserve record storage
+
     };
 }

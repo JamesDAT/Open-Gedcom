@@ -28,6 +28,7 @@ target_sources(OpenGedcom
 
     PRIVATE
         src/OpenGedcom.cpp
+        src/Internal/Storage.cpp
 
         ${Parser_Files}
 )

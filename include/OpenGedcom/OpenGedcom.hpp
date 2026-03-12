@@ -27,7 +27,7 @@ namespace OpenGedcom {
     public:
 
         // Documents should be created through the static Parse functions
-        Document(Internal::Registry&& registry, Internal::Storage&& storage);
+        Document(std::unique_ptr<Internal::Registry> registry, std::unique_ptr<Internal::Storage> storage);
         ~Document();
 
         // Prevent accidental copies, Document stores unique ownership objects
@@ -76,8 +76,8 @@ namespace OpenGedcom {
 
     private:
         // cannot be forward declared due to use in templates
-        Internal::Registry m_registry;
-        Internal::Storage m_storage;
+        std::unique_ptr<Internal::Registry> m_registry;
+        std::unique_ptr<Internal::Storage> m_storage;
 
     };
 }
