@@ -82,8 +82,12 @@ namespace OpenGedcom {
         /// Trait system not equipped to deal with this yet, requires registry rework to get the traits of a node type, as it requires reverse type searching
         std::vector<EventView> IndividualView::Events() const {
                 std::vector<EventView> events;
-                
-                
+                auto nodes = Traverse::GetChildren(this, TagTraits::Event);
+
+                for(auto node : nodes) {
+                        EventView eventView{const_cast<GedcomNode*>(node), const_cast<TagRegistry*>(Registry())};
+                        events.push_back(eventView);
+                }
 
                 return events;
         }

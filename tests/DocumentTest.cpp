@@ -24,6 +24,9 @@ namespace OpenGedcom {
             std::cout << "Indi Surname: " << view->Surname().value() << '\n';
             std::cout << "Resi Count: " << view->Residence().size() << '\n';
             std::cout << "Occu Count: " << view->Occupations().size() << '\n';
+            
+            auto events = view->Events();
+            std::cout << "Event Count: " << events.size() << '\n';
         }
 
         

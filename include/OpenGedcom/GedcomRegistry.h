@@ -15,6 +15,7 @@
 
 #include <concepts>
 #include <functional>
+#include <iostream>
 #include <string_view>
 #include <typeindex>
 #include <unordered_map>
@@ -86,6 +87,20 @@ namespace OpenGedcom {
             return tag.Type() == it->second.id;
         }
 
+        bool HasTrait(const GedcomNode& tag, TagTraits trait) const {
+            if(static_cast<uint32_t>(trait) != 0) {
+                std::cout << "Checking Non zero trait\n";
+            }
+            for(auto& [key, value] : m_typeToId) {
+                if(value.id == tag.Type()) {
+                    std::cout << "Tag Type: " << value.id << '\n';
+                    std::cout << "Trait: " << static_cast<uint32_t>(value.traits) << '\n';
+                    return Traits::HasTrait(value.traits, trait);
+                }
+            }
+            return false;
+        }
+
         template<typename T>
         TagTraits TagTrait() const {
             return T::TagTrait;
@@ -112,9 +127,19 @@ namespace OpenGedcom {
             return std::make_unique<T>(value);
         }
 
+        template<typename T>
+        constexpr TagTraits GetTagTraits() {
+            if constexpr (requires { T::Traits; }) {
+                return T::Traits;
+            }
+            else {
+                return TagTraits::None;
+            }
+        }
+
         template<typename... Tags>
         void RegisterBuiltinTags(std::type_identity<std::tuple<Tags...>>) {
-            (RegisterTag<Tags>(std::string(Tags::TagName), TagTraits(Tags::Traits)), ...);
+            (RegisterTag<Tags>(std::string(Tags::TagName), GetTagTraits<Tags>()), ...);
         }
 
     };

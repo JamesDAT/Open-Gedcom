@@ -9,15 +9,18 @@ namespace OpenGedcom {
         Event = 1 << 0
     };
 
-    inline TagTraits operator|(TagTraits a, TagTraits b) {
-        return static_cast<TagTraits>(
-            static_cast<uint32_t>(a) |
-            static_cast<uint32_t>(b)
-        );
-    }
+    namespace Traits {
 
-    inline bool HasTrait(TagTraits value, TagTraits trait) {
-        return (static_cast<uint32_t>(value) &
-                static_cast<uint32_t>(trait)) != 0;
+        inline TagTraits operator|(TagTraits a, TagTraits b) {
+            return static_cast<TagTraits>(
+                static_cast<uint32_t>(a) |
+                static_cast<uint32_t>(b)
+            );
+        }
+
+        inline bool HasTrait(TagTraits value, TagTraits trait) {
+            return (static_cast<uint32_t>(value) &
+                    static_cast<uint32_t>(trait)) != 0;
+        }
     }
 }

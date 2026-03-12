@@ -25,8 +25,6 @@ namespace OpenGedcom {
     public:
         GedcomTag() = default;
         virtual ~GedcomTag() = default;
-
-        static constexpr TagTraits Traits = TagTraits::None;
     };
 
     class GedcomNode final {

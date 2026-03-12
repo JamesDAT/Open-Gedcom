@@ -4,6 +4,7 @@
 #include "OpenGedcom/GedcomObject.h"
 #include "OpenGedcom/GedcomRegistry.h"
 #include "OpenGedcom/GedcomViews.h"
+#include "OpenGedcom/Tags/TagTraits.h"
 
 namespace OpenGedcom {
     class Traverse {
@@ -43,6 +44,21 @@ namespace OpenGedcom {
             for(auto& child : node->GetChildren()) {
                 if (registry->IsType<T>(child)) {
                     children.push_back(&child);
+                }
+            }
+
+            return children;
+        }
+
+        static inline std::vector<const GedcomNode*> GetChildren(const TagView* view, TagTraits trait) {
+            std::vector<const GedcomNode*> children{};
+            const auto* registry = view->Registry();
+            const GedcomNode* node = view->Data();
+
+
+            for(auto& child : node->GetChildren()) {
+                if(registry->HasTrait(*node, trait)) {
+                    children.push_back(node);
                 }
             }
 
