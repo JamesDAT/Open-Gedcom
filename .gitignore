@@ -3,6 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+samples/large_test.ged
+
 # User-specific files
 *.rsuser
 *.suo

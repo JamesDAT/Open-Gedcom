@@ -34,9 +34,6 @@ namespace OpenGedcom::Internal {
         TagNode(std::string_view data) 
             : m_data(data) {}
 
-        TagNode(uint32_t dataIndex, uint32_t dataSize) 
-            : m_dataIndex(dataIndex), m_dataSize(dataSize) {}
-
         TagType Type() const {
             return m_tagType;
         }
@@ -82,8 +79,6 @@ namespace OpenGedcom::Internal {
         std::string_view m_data;
         std::unique_ptr<std::vector<TagNode>> m_children = nullptr;
 
-        uint32_t m_dataIndex = 0;
-        uint32_t m_dataSize = 0;
         uint32_t m_id = INVALID_ID;
 
         TagType m_tagType = INVALID_TAG;

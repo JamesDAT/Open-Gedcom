@@ -8,12 +8,12 @@ import sys
 
 # Config
 output_file = "large_test.ged"
-num_individuals = 100000  # adjust for file size
+num_individuals = 500000  # adjust for file size
 use_unicode = True  # include multibyte UTF-8 characters
 
 # Sample data
-name_base = "Jöhn /Döe" if use_unicode else "John /Doe"
-birth_place = "München, Bayern" if use_unicode else "Springfield, State"
+name_base = "Jöhn MiddleName /Döe" if use_unicode else "John /Doe"
+birth_place = "München, Bayern, Plus Some Extra Text to make this much long. The more text stored in tags, the better the file size to memory size ratio." if use_unicode else "Springfield, State"
 death_place = birth_place
 
 with open(output_file, "wb") as f:

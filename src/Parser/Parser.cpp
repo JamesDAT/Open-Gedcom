@@ -4,8 +4,6 @@
 #include "Parser.hpp"
 #include <cctype>
 
-#include <iostream>
-
 namespace OpenGedcom::Internal {
     Parser::Parser(Storage* storage, Registry* registry, bool makeCopies)
         :   m_storage(storage),
@@ -32,9 +30,6 @@ namespace OpenGedcom::Internal {
         }
 
         m_storage->ReserveRecords(m_recordCount);
-        if(m_makeCopies) {
-            m_storage->ReserveStringArena(EstimateStorageSize(data.size()));
-        }
 
         // parse lines
         size_t lineStart = 0;
@@ -126,7 +121,13 @@ namespace OpenGedcom::Internal {
             value = std::string_view(&*it, std::distance(it, end));
         }
 
-        CreateTag(level, xref, tag, value);
+        if(m_makeCopies) {
+            auto copyView = m_storage->AddString(value);
+            CreateTag(level, xref, tag, copyView);
+        }
+        else {
+            CreateTag(level, xref, tag, value);
+        }
     }
 
     void Parser::CreateTag(uint32_t level, uint32_t xref, std::string_view tag, std::string_view value) {

@@ -1,8 +1,14 @@
 #include <OpenGedcom/OpenGedcom.hpp>
+#include <chrono>
+#include <thread>
 #include "SimpleReader.hpp"
 
 int main() {
-    std::string data = SimpleReader::ReadWholeFile("test/samples/spec7Generated.ged");
+    using namespace std::chrono_literals;
+
+    std::string data = SimpleReader::ReadWholeFile("test/samples/large_test.ged");
+    //OpenGedcom::Document docCopy = OpenGedcom::Document::ParseCopy(data);
+    //data.clear();
     OpenGedcom::Document doc = OpenGedcom::Document::ParseDOM(std::move(data));
 
     return 0;

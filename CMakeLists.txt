@@ -25,6 +25,7 @@ target_sources(OpenGedcom
         ${PUBLIC_INCLUDE}/Internal/OpenGedcom.ipp
         ${PUBLIC_INCLUDE}/Internal/Registry.hpp
         ${PUBLIC_INCLUDE}/Internal/Storage.hpp
+        ${PUBLIC_INCLUDE}/Internal/StringArena.hpp
 
         ${PUBLIC_INCLUDE}/Tags/TagBase.hpp
         ${PUBLIC_INCLUDE}/Tags/TagTraits.hpp
@@ -33,6 +34,7 @@ target_sources(OpenGedcom
     PRIVATE
         src/OpenGedcom.cpp
         src/Internal/Storage.cpp
+        src/Internal/StringArena.cpp
 
         ${Parser_Files}
 )

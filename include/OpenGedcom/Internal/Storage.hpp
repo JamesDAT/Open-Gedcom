@@ -13,11 +13,12 @@
 #pragma once
 #include "Registry.hpp"
 #include "TagNode.hpp"
+#include "StringArena.hpp"
 
 //std
 #include <cstddef>
+#include <iostream>
 #include <string_view>
-#include <string>
 #include <vector>
 
 namespace OpenGedcom::Internal {
@@ -30,26 +31,47 @@ namespace OpenGedcom::Internal {
             m_records.reserve(size);
         }
 
-        inline void ReserveStringArena(size_t size) {
-            m_stringArena.reserve(size);
-        }
-
         inline std::vector<TagNode>& Records() {
             return m_records;
         }
 
-        inline std::string& Arena() {
-            return m_stringArena;
+        inline std::string_view SetOwnedString(std::string&& data) {
+            m_ownedStorage = std::move(data);
+            return m_ownedStorage;
         }
-        
+
+        inline std::string_view GetOwnedString() const {
+            return m_ownedStorage;
+        }
+
+        inline std::string_view AddString(std::string_view data) {
+            return m_arena.Store(data);
+        }
+
+        /// Debug function
+        void PrintAllRecords() {
+            for(auto& record : m_records) {
+                std::cout << "Level: " << 0 << " Value: " << record.GetData() << '\n';
+                PrintRecursive(1, record.GetChildren());
+            }
+        }
+
     private:
+        void PrintRecursive(uint32_t level, std::span<TagNode> nodes) {
+            for(auto& node : nodes) {
+                std::cout << "Level: " << level << " Value: " << node.GetData() << '\n';
+                PrintRecursive(level + 1, node.GetChildren());
+            }
+        }
+
         std::string_view Store(std::string_view src);
         
         Registry* m_registry;
 
         std::vector<TagNode> m_records;
 
-        std::string m_stringArena;
-
+        // arena used in copying, ownedStorage used in non copying
+        StringArena m_arena;
+        std::string m_ownedStorage;
     };
 }
