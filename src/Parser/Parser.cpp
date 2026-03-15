@@ -3,6 +3,7 @@
 
 #include "Parser.hpp"
 #include <cctype>
+
 #include <iostream>
 
 namespace OpenGedcom::Internal {

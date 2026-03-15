@@ -4,6 +4,7 @@
 #include "OpenGedcom/OpenGedcom.hpp"
 
 #include "Parser/Parser.hpp"
+#include <iostream>
 
 namespace OpenGedcom {
     using namespace Internal;

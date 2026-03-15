@@ -129,7 +129,7 @@ namespace OpenGedcom::Internal {
 
         template<GedcomTagType... Tags>
         void RegisterBuiltinTags(std::type_identity<std::tuple<Tags...>>) {
-            (RegisterTag<Tags>(std::string(Tags::TagName), GetTagTraits<Tags>()), ...);
+            (RegisterTag<Tags>(Tags::TagName, GetTagTraits<Tags>()), ...);
         }
 
         TagType m_currentTagId = 0;

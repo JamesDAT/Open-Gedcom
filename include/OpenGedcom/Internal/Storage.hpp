@@ -37,6 +37,10 @@ namespace OpenGedcom::Internal {
         inline std::vector<TagNode>& Records() {
             return m_records;
         }
+
+        inline std::string& Arena() {
+            return m_stringArena;
+        }
         
     private:
         std::string_view Store(std::string_view src);
