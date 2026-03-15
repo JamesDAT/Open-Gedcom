@@ -20,10 +20,12 @@
 #include <memory>
 #include <string_view>
 #include <vector>
+#include <span>
 
 namespace OpenGedcom::Internal {
     using TagType = uint8_t;
-    constexpr TagType INVALID_TAG = 0;
+    constexpr TagType INVALID_TAG = UINT8_MAX;
+    constexpr uint32_t INVALID_ID = UINT32_MAX;
 
     class TagNode final {
     public:
@@ -35,13 +37,54 @@ namespace OpenGedcom::Internal {
         TagNode(uint32_t dataIndex, uint32_t dataSize) 
             : m_dataIndex(dataIndex), m_dataSize(dataSize) {}
 
+        TagType Type() const {
+            return m_tagType;
+        }
+
+        void SetType(TagType tagType) {
+            m_tagType = tagType;
+        }
+
+        uint32_t GetId() const {
+            return m_id;
+        }
+
+        void SetId(uint32_t id) {
+            m_id = id;
+        }
+
+        std::string_view GetData() const {
+            return m_data;
+        }
+
+        void SetData(std::string_view data) {
+            m_data = data;
+        }
+
+        TagNode* AddChild(TagNode&& child) {
+            if(m_children == nullptr) {
+                m_children = std::make_unique<std::vector<TagNode>>();
+            }
+
+            m_children->push_back(std::move(child));
+            return &m_children->back();
+        }
+
+        std::span<TagNode> GetChildren() const {
+            if(m_children == nullptr) {
+                return {};
+            }
+
+            return *m_children;
+        }
+
     private:
         std::string_view m_data;
-        std::unique_ptr<std::vector<TagNode>> m_children;
+        std::unique_ptr<std::vector<TagNode>> m_children = nullptr;
 
         uint32_t m_dataIndex = 0;
         uint32_t m_dataSize = 0;
-        uint32_t m_id = UINT32_MAX;
+        uint32_t m_id = INVALID_ID;
 
         TagType m_tagType = INVALID_TAG;
     };

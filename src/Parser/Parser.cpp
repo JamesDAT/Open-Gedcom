@@ -50,13 +50,14 @@ namespace OpenGedcom::Internal {
             ParseLine(std::string_view(data.data() + lineStart,
                                             data.size() - lineStart));
         }
+
+        m_stack.clear();
     }
 
     void Parser::ParseLine(const std::string_view line) {
         uint32_t level = 0;
         uint32_t xref = UINT32_MAX;
         std::string_view tag;
-        uint32_t id = UINT32_MAX;
         std::string_view value;
 
         auto it = line.begin();
@@ -66,6 +67,10 @@ namespace OpenGedcom::Internal {
         if(it < end && std::isdigit(*it)) {
             level = *it - '0'; // convert char to int
             ++it;
+        }
+        else {
+            // blank line, or just invalid, they must start with a level number
+            return;
         }
 
         // blank
@@ -120,9 +125,35 @@ namespace OpenGedcom::Internal {
             value = std::string_view(&*it, std::distance(it, end));
         }
 
-        std::cout << level << ' ';
-        std::cout << (xref != UINT32_MAX ? xref : 0) << ' ';
-        std::cout << tag << ' ';
-        std::cout << value << '\n';
+        CreateTag(level, xref, tag, value);
+    }
+
+    void Parser::CreateTag(uint32_t level, uint32_t xref, std::string_view tag, std::string_view value) {
+        auto& graph = m_storage->Records();
+        TagNode node = m_registry->Create(tag);
+
+        node.SetId(xref);
+        node.SetData(value);
+
+        // resize stack to current level
+        m_stack.resize(level + 1);
+
+        uint32_t tagIndex = 0;
+        if(level == 0) {
+            graph.push_back(std::move(node));
+            tagIndex = graph.size() - 1;
+        }
+        else {
+            TagNode* stackNode = &graph[m_stack[0]];
+
+            for(uint32_t i = 1; i < level; ++i) {
+                stackNode = &stackNode->GetChildren()[m_stack[i]];
+            }
+
+            stackNode->AddChild(std::move(node));
+            tagIndex = stackNode->GetChildren().size() - 1;
+        }
+
+        m_stack[level] = tagIndex;
     }
 }

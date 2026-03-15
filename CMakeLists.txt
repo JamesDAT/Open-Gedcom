@@ -26,6 +26,10 @@ target_sources(OpenGedcom
         ${PUBLIC_INCLUDE}/Internal/Registry.hpp
         ${PUBLIC_INCLUDE}/Internal/Storage.hpp
 
+        ${PUBLIC_INCLUDE}/Tags/TagBase.hpp
+        ${PUBLIC_INCLUDE}/Tags/TagTraits.hpp
+        ${PUBLIC_INCLUDE}/Tags/GedcomTags.hpp
+
     PRIVATE
         src/OpenGedcom.cpp
         src/Internal/Storage.cpp

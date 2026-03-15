@@ -32,6 +32,7 @@ namespace OpenGedcom::Internal {
 
     private:
         void ParseLine(const std::string_view data);
+        void CreateTag(uint32_t level, uint32_t xref, std::string_view tag, std::string_view value);
 
         inline size_t EstimateLineCount(size_t bytes) const {
             return bytes / 32 + 8; // rough estimate of 32 bytes per line on average
@@ -50,5 +51,6 @@ namespace OpenGedcom::Internal {
         std::vector<uint32_t> m_lineInfo{};
         size_t m_recordCount = 0; // used to reserve record storage
 
+        std::vector<uint32_t> m_stack; // stack of indices
     };
 }
