@@ -17,6 +17,9 @@ set(Views_Files
     src/Views/TagTreeParser.hpp
     src/Views/ViewBase.cpp
     src/Views/IndiView.cpp
+    src/Views/DateView.cpp
+    src/Views/BirthView.cpp
+    src/Views/PlaceView.cpp
 )
 
 target_sources(OpenGedcom
@@ -34,7 +37,11 @@ target_sources(OpenGedcom
         ${PUBLIC_INCLUDE}/Tags/GedcomTags.hpp
 
         ${PUBLIC_INCLUDE}/Views/ViewBase.hpp
+        ${PUBLIC_INCLUDE}/Views/GedcomViews.hpp
         ${PUBLIC_INCLUDE}/Views/IndiView.hpp
+        ${PUBLIC_INCLUDE}/Views/DateView.hpp
+        ${PUBLIC_INCLUDE}/Views/BirthView.hpp
+        ${PUBLIC_INCLUDE}/Views/PlaceView.hpp
 
     PRIVATE
         src/OpenGedcom.cpp

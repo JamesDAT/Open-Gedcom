@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "OpenGedcom/Internal/Storage.hpp"
+#include "OpenGedcom/Internal/Registry.hpp"
 #include "OpenGedcom/Internal/TagNode.hpp"
 
 // std
@@ -28,11 +28,25 @@ namespace OpenGedcom {
             : m_document(doc), m_node(node) {}
         virtual ~TagView() {}
 
-        std::string_view Value() const {
+        inline Internal::TagNode* Get() const {
+            return m_node;
+        }
+
+        inline std::string_view Value() const {
             return m_node->GetData();
         }
 
         std::string_view SetValue(std::string_view data);
+
+        std::vector<TagView> GetSubViews() const {
+            std::vector<TagView> children;
+
+            for(auto& node : m_node->GetChildren()) {
+                children.push_back(TagView{m_document, &node});
+            }
+
+            return children;
+        }
 
         std::optional<uint32_t> Id() const {
             if(m_node->GetId() == Internal::INVALID_ID) {

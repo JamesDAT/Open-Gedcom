@@ -84,6 +84,11 @@ namespace OpenGedcom {
         [[nodiscard]] std::optional<IndiView> GetIndividual(uint32_t id);
         [[nodiscard]] std::vector<IndiView> GetIndividual(std::string_view name);
 
+        template<Internal::GedcomTagType T>
+        bool IsType(const TagView& view) {
+            return m_registry->IsType<T>(*view.Get());
+        }
+
         Internal::Registry* GetRegistry() {
             return m_registry.get();
         }

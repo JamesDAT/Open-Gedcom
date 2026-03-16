@@ -50,4 +50,28 @@ namespace OpenGedcom {
             return std::nullopt;
         }
     }
+
+    std::optional<char> IndiView::Sex() const {
+        if(auto value = GetValueFromFirstOfType<SexTag>(m_document->GetRegistry(), m_node->GetChildren())) {
+            if(value->empty()) {
+                return std::nullopt;
+            }
+
+            return value->at(0);
+        }
+        return std::nullopt;
+    }
+
+    std::vector<TagView> IndiView::Events() const {
+        std::vector<TagView> events;
+        auto registry = m_document->GetRegistry();
+
+        for(auto& node : m_node->GetChildren()) {
+            if(registry->HasTrait(node, TagTraits::Event)) {
+                events.push_back(TagView{m_document, &node});
+            }
+        }
+
+        return events;
+    }
 }

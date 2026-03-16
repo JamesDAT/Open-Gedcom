@@ -20,6 +20,10 @@ namespace OpenGedcom {
         std::optional<std::string_view> FirstName() const;
         std::optional<std::string_view> LastName() const;
 
+        std::optional<char> Sex() const;
+
+        std::vector<TagView> Events() const;
+
     private:
 
     };

@@ -24,4 +24,15 @@ namespace OpenGedcom::Internal {
 
         return std::nullopt;
     }
+
+    template<GedcomTagType T>
+    static std::optional<TagNode*> GetFirstOfType(Registry* registry, std::span<TagNode> nodes) {
+        for(auto& node : nodes) {
+            if(registry->IsType<T>(node)) {
+                return &node;
+            }
+        }
+
+        return std::nullopt;
+    }
 }

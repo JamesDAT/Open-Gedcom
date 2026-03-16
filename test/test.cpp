@@ -2,6 +2,8 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include "OpenGedcom/Tags/Events.hpp"
+#include "OpenGedcom/Views/BirthView.hpp"
 #include "SimpleReader.hpp"
 
 int main() {
@@ -12,12 +14,25 @@ int main() {
     //data.clear();
     OpenGedcom::Document doc = OpenGedcom::Document::ParseDOM(std::move(data));
 
-    for(auto view : doc.GetIndividual("John /DOE/")) {
-        std::cout << "Got Id: " << view.Id().value_or(0) << '\n';
-        std::cout << "Got Indi: " << view.Name().value_or("Not Found") << '\n';
-        std::cout << "Got FirstName: " << view.FirstName().value_or("Not Found") << '\n';
-        std::cout << "Got LastName: " << view.LastName().value_or("Not Found") << '\n';
-        std::cout << "Got Given: " << view.GivenName().value_or("Not Found") << '\n';
+    if(auto indi = doc.GetIndividual(5911)) {
+        std::cout << "Sex: " << indi->Sex().value_or('U') << '\n';
+
+        auto events = indi->Events();
+
+        for(auto view : events) {
+            if(doc.IsType<OpenGedcom::BirthTag>(view)) {
+                OpenGedcom::BirthView birthView{&doc, view.Get()};
+
+                if(auto date = birthView.GetDate()) {
+                    std::cout << "Birth Date: " << date->Date() << '\n';
+                    std::cout << "Birth Time: " << date->Time().value_or("Unknown Time") << '\n';
+                }
+
+                if(auto place = birthView.GetPlace()) {
+                    std::cout << "Birth Place: " << place->Place() << '\n';
+                }
+            }
+        }
     }
 
     return 0;
