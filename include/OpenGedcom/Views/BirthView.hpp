@@ -17,8 +17,10 @@ namespace OpenGedcom {
     public:
         using TagView::TagView;
 
-        std::optional<DateView> GetDate() const;
-        std::optional<PlaceView> GetPlace() const;
+        [[nodiscard]] std::optional<DateView> GetDate() const;
+        [[nodiscard]] std::optional<PlaceView> GetPlace() const;
+
+        [[nodiscard]] std::optional<std::string_view> GetLocation() const;
 
     private:
 

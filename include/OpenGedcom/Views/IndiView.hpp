@@ -15,14 +15,14 @@ namespace OpenGedcom {
     public:
         using TagView::TagView;
 
-        std::optional<std::string_view> Name() const;
-        std::optional<std::string_view> GivenName() const;
-        std::optional<std::string_view> FirstName() const;
-        std::optional<std::string_view> LastName() const;
+        [[nodiscard]] std::optional<std::string_view> Name() const;
+        [[nodiscard]] std::optional<std::string_view> GivenName() const;
+        [[nodiscard]] std::optional<std::string_view> FirstName() const;
+        [[nodiscard]] std::optional<std::string_view> LastName() const;
 
-        std::optional<char> Sex() const;
+        [[nodiscard]] std::optional<char> Sex() const;
 
-        std::vector<TagView> Events() const;
+        [[nodiscard]] std::vector<TagView> Events() const;
 
     private:
 

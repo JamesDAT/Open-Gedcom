@@ -1,17 +1,11 @@
 #include <OpenGedcom/OpenGedcom.hpp>
-#include <chrono>
 #include <iostream>
-#include <thread>
 #include "OpenGedcom/Tags/Events.hpp"
 #include "OpenGedcom/Views/BirthView.hpp"
 #include "SimpleReader.hpp"
 
 int main() {
-    using namespace std::chrono_literals;
-
     std::string data = SimpleReader::ReadWholeFile("test/active-test/main.ged");
-    //OpenGedcom::Document docCopy = OpenGedcom::Document::ParseCopy(data);
-    //data.clear();
     OpenGedcom::Document doc = OpenGedcom::Document::ParseDOM(std::move(data));
 
     if(auto indi = doc.GetIndividual(5911)) {
@@ -28,9 +22,8 @@ int main() {
                     std::cout << "Birth Time: " << date->Time().value_or("Unknown Time") << '\n';
                 }
 
-                if(auto place = birthView.GetPlace()) {
-                    std::cout << "Birth Place: " << place->Place() << '\n';
-                }
+                std::cout << "Birth Place: " << birthView.GetLocation().value_or("Unknown Location") << '\n';
+                
             }
         }
     }
