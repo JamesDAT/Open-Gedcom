@@ -106,7 +106,7 @@ namespace OpenGedcom::Internal {
 
         // tag
         auto tagBegin = it;
-        while (it != end && *it != ' ') {
+        while (it != end && !std::isspace(*it)) {
             ++it;
         }
         tag = std::string_view(tagBegin, std::distance(tagBegin, it));
@@ -118,7 +118,7 @@ namespace OpenGedcom::Internal {
 
         // value
         if(it != end) {
-            value = std::string_view(&*it, std::distance(it, end));
+            value = std::string_view(&*it, std::distance(it, end - 1)); // remove newline character from end
         }
 
         if(m_makeCopies) {
@@ -151,9 +151,17 @@ namespace OpenGedcom::Internal {
             for(uint32_t i = 1; i < level; ++i) {
                 stackNode = &stackNode->GetChildren()[m_stack[i]];
             }
+            
+            // TODO: This doesn't work, the graph at the stack 0 index is not IndiTag ever for some reason
+            if(m_registry->IsType<NameTag>(node)) {
+                if(m_registry->IsType<IndiTag>(graph[m_stack[0]])) {
+                    m_storage->AddName(value, graph.size() - 1);
+                }
+            }
 
             stackNode->AddChild(std::move(node));
             tagIndex = stackNode->GetChildren().size() - 1;
+
         }
 
         m_stack[level] = tagIndex;

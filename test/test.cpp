@@ -6,7 +6,7 @@
 int main() {
     using namespace std::chrono_literals;
 
-    std::string data = SimpleReader::ReadWholeFile("test/samples/large_test.ged");
+    std::string data = SimpleReader::ReadWholeFile("test/active-test/main.ged");
     //OpenGedcom::Document docCopy = OpenGedcom::Document::ParseCopy(data);
     //data.clear();
     OpenGedcom::Document doc = OpenGedcom::Document::ParseDOM(std::move(data));

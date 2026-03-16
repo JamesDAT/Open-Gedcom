@@ -4,6 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 samples/large_test.ged
+active-test/
 
 # User-specific files
 *.rsuser

@@ -18,7 +18,9 @@
 //std
 #include <cstddef>
 #include <iostream>
+#include <span>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 namespace OpenGedcom::Internal {
@@ -48,11 +50,34 @@ namespace OpenGedcom::Internal {
             return m_arena.Store(data);
         }
 
+        inline void AddName(std::string_view name, uint32_t index) {
+            m_nameList.push_back({name, index});
+        }
+
+        inline std::span<std::pair<std::string_view, uint32_t>> GetNameIndices() {
+            return m_nameList;
+        }
+
         /// Debug function
         void PrintAllRecords() {
             for(auto& record : m_records) {
                 std::cout << "Level: " << 0 << " Value: " << record.GetData() << '\n';
                 PrintRecursive(1, record.GetChildren());
+            }
+        }
+
+        void PrintAllNameIndices() {
+            for(auto& [name, index] : m_nameList) {
+                std::cout << "Name: " << name << '\n';
+            }
+        }
+
+        void PrintAllWithName(std::string_view nameToSearch) {
+            for(auto& [name, index] : m_nameList) {
+                if(name == nameToSearch) {
+                    std::cout << "Found: " << index << '\n';
+                    std::cout << "ID: " << m_records[index].GetId() << '\n';
+                }
             }
         }
 
@@ -69,6 +94,7 @@ namespace OpenGedcom::Internal {
         Registry* m_registry;
 
         std::vector<TagNode> m_records;
+        std::vector<std::pair<std::string_view, uint32_t>> m_nameList;
 
         // arena used in copying, ownedStorage used in non copying
         StringArena m_arena;

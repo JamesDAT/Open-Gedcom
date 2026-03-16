@@ -14,6 +14,8 @@ namespace OpenGedcom::Internal {
     }
 
     std::string_view StringArena::Store(std::string_view src) {
+        if(src.empty()) return {};
+
         if(m_chunks.empty() || m_offset + src.size() > CHUNK_SIZE) {
             m_chunks.reserve(CHUNK_SIZE);
             m_chunks.push_back(std::make_unique<char[]>(CHUNK_SIZE));

@@ -57,13 +57,15 @@ namespace OpenGedcom::Internal {
 
 
         TagNode Create(std::string_view tagName) const {
+            TagNode node{};
+
             auto it = m_tagToId.find(tagName);
             if (it == m_tagToId.end()) {
                 // unknown tag
-                return {};
+                node.SetType(INVALID_TAG);
+                return node;
             }
 
-            TagNode node{};
             node.SetType(it->second);
             return node;
         }
@@ -88,6 +90,15 @@ namespace OpenGedcom::Internal {
                 return false;
 
             return tag.Type() == it->second;
+        }
+
+        std::string_view GetTypeString(const TagNode& node) const {
+            for(auto& [string, id] : m_tagToId) {
+                if(node.Type() == id) {
+                    return string;
+                }
+            }
+            return "Unknown Type";
         }
 
 
