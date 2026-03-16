@@ -18,7 +18,14 @@
 #include "Internal/Registry.hpp"
 #include "Internal/Storage.hpp"
 
+// tags
+#include "Tags/GedcomTags.hpp"
+
+// views
+#include "Views/GedcomViews.hpp"
+
 // std
+#include <optional>
 #include <string>
 #include <memory>
 
@@ -73,6 +80,15 @@ namespace OpenGedcom {
         /// @return New document with the parsed Gedcom data
         [[nodiscard]] static Document ParseReader(std::shared_ptr<IReader> reader, bool lazyLoad = false);
         
+        [[nodiscard]] std::optional<IndiView> GetIndividual(uint32_t id);
+
+        Internal::Registry* GetRegistry() {
+            return m_registry.get();
+        }
+
+        Internal::Storage* GetStorage() {
+            return m_storage.get();
+        }
 
     private:
         // cannot be forward declared due to use in templates

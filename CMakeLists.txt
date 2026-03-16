@@ -14,7 +14,9 @@ set(Parser_Files
 )
 
 set(Views_Files
-    
+    src/Views/TagTreeParser.hpp
+    src/Views/ViewBase.cpp
+    src/Views/IndiView.cpp
 )
 
 target_sources(OpenGedcom
@@ -31,12 +33,16 @@ target_sources(OpenGedcom
         ${PUBLIC_INCLUDE}/Tags/TagTraits.hpp
         ${PUBLIC_INCLUDE}/Tags/GedcomTags.hpp
 
+        ${PUBLIC_INCLUDE}/Views/ViewBase.hpp
+        ${PUBLIC_INCLUDE}/Views/IndiView.hpp
+
     PRIVATE
         src/OpenGedcom.cpp
         src/Internal/Storage.cpp
         src/Internal/StringArena.cpp
 
         ${Parser_Files}
+        ${Views_Files}
 )
 
 target_include_directories(OpenGedcom

@@ -55,6 +55,10 @@ namespace OpenGedcom::Internal {
             return m_nameList;
         }
 
+        inline Registry* GetRegistry() const {
+            return m_registry;
+        }
+
         /// Debug function
         void PrintAllRecords() {
             for(auto& record : m_records) {

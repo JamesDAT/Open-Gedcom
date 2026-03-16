@@ -3,6 +3,7 @@
 
 #include "OpenGedcom/OpenGedcom.hpp"
 
+#include "OpenGedcom/Views/IndiView.hpp"
 #include "Parser/Parser.hpp"
 
 namespace OpenGedcom {
@@ -11,6 +12,7 @@ namespace OpenGedcom {
     Document::Document(std::unique_ptr<Internal::Registry> registry, std::unique_ptr<Internal::Storage> storage) {
         m_registry = std::move(registry);
         m_storage = std::move(storage);
+        
     }
 
     Document::~Document() {
@@ -44,5 +46,15 @@ namespace OpenGedcom {
         Parser parser{storage.get(), registry.get(), true};
 
         return {std::move(registry), std::move(storage)};
+    }
+
+    std::optional<IndiView> Document::GetIndividual(uint32_t id) {
+        for(auto& record : m_storage->Records()) {
+            if(record.GetId() == id) {
+                return IndiView{this, &record};
+            }
+        }
+
+        return std::nullopt;
     }
 }
