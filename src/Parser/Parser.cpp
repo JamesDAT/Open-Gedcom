@@ -152,7 +152,6 @@ namespace OpenGedcom::Internal {
                 stackNode = &stackNode->GetChildren()[m_stack[i]];
             }
             
-            // TODO: This doesn't work, the graph at the stack 0 index is not IndiTag ever for some reason
             if(m_registry->IsType<NameTag>(node)) {
                 if(m_registry->IsType<IndiTag>(graph[m_stack[0]])) {
                     m_storage->AddName(value, graph.size() - 1);
