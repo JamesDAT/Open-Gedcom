@@ -27,6 +27,8 @@ namespace OpenGedcom::Internal {
     class Storage {
     public:
         Storage(Registry* registry);
+        Storage(Registry* registry, std::string&& data) 
+            : m_ownedStorage(std::move(data)) {}
         ~Storage();
 
         inline void ReserveRecords(size_t size) {
@@ -35,11 +37,6 @@ namespace OpenGedcom::Internal {
 
         inline std::vector<TagNode>& Records() {
             return m_records;
-        }
-
-        inline std::string_view SetOwnedString(std::string&& data) {
-            m_ownedStorage = std::move(data);
-            return m_ownedStorage;
         }
 
         inline std::string_view GetOwnedString() const {
@@ -97,7 +94,9 @@ namespace OpenGedcom::Internal {
         std::vector<std::pair<std::string_view, uint32_t>> m_nameList;
 
         // arena used in copying, ownedStorage used in non copying
+        // mutations made will always go to the arena.
+        // the ownedStorage must never be modified or invalidated
         StringArena m_arena;
-        std::string m_ownedStorage;
+        const std::string m_ownedStorage;
     };
 }

@@ -19,8 +19,7 @@ namespace OpenGedcom {
 
     Document Document::ParseDOM(std::string&& data) {
         auto registry = std::make_unique<Registry>();
-        auto storage = std::make_unique<Storage>(registry.get());
-        storage->SetOwnedString(std::move(data));
+        auto storage = std::make_unique<Storage>(registry.get(), std::move(data));
 
         Parser parser{storage.get(), registry.get(), false};
         parser.Parse(storage->GetOwnedString());
