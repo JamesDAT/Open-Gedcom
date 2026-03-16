@@ -57,4 +57,15 @@ namespace OpenGedcom {
 
         return std::nullopt;
     }
+
+    std::vector<IndiView> Document::GetIndividual(std::string_view name) {
+        std::vector<IndiView> views;
+        for(auto& [nameView, index] : m_storage->GetNameIndices()) {
+            if(nameView == name) {
+                views.push_back(IndiView{this, &m_storage->Records()[index]});
+            }
+        }
+
+        return views;
+    }
 }

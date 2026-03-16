@@ -12,14 +12,12 @@ int main() {
     //data.clear();
     OpenGedcom::Document doc = OpenGedcom::Document::ParseDOM(std::move(data));
 
-    if(auto view = doc.GetIndividual(5911)) {
-        std::cout << "Got Indi: " << view->Name().value_or("Not Found") << '\n';
-        std::cout << "Got FirstName: " << view->FirstName().value_or("Not Found") << '\n';
-        std::cout << "Got LastName: " << view->LastName().value_or("Not Found") << '\n';
-        std::cout << "Got Given: " << view->GivenName().value_or("Not Found") << '\n';
-    }
-    else {
-        std::cout << "Indi Not Found" << '\n';
+    for(auto view : doc.GetIndividual("John /DOE/")) {
+        std::cout << "Got Id: " << view.Id().value_or(0) << '\n';
+        std::cout << "Got Indi: " << view.Name().value_or("Not Found") << '\n';
+        std::cout << "Got FirstName: " << view.FirstName().value_or("Not Found") << '\n';
+        std::cout << "Got LastName: " << view.LastName().value_or("Not Found") << '\n';
+        std::cout << "Got Given: " << view.GivenName().value_or("Not Found") << '\n';
     }
 
     return 0;

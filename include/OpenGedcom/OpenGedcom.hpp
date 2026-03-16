@@ -28,6 +28,7 @@
 #include <optional>
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace OpenGedcom {
     class Document {
@@ -81,6 +82,7 @@ namespace OpenGedcom {
         [[nodiscard]] static Document ParseReader(std::shared_ptr<IReader> reader, bool lazyLoad = false);
         
         [[nodiscard]] std::optional<IndiView> GetIndividual(uint32_t id);
+        [[nodiscard]] std::vector<IndiView> GetIndividual(std::string_view name);
 
         Internal::Registry* GetRegistry() {
             return m_registry.get();
