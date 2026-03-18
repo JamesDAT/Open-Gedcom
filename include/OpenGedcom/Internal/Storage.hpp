@@ -34,10 +34,10 @@ namespace OpenGedcom::Internal {
         ~Storage();
 
         inline void ReserveRecords(size_t size) {
-            m_records.reserve(size);
+            m_records.Reserve(size);
         }
 
-        inline std::vector<TagNode>& Records() {
+        inline RecordStorage& Records() {
             return m_records;
         }
 
@@ -100,7 +100,7 @@ namespace OpenGedcom::Internal {
         // as it will be mutated at runtime if the user adds records, it could invalidate all views.
         // a simple implementation like the StringArena would work, and indices into it can also still
         // work like normal
-        std::vector<TagNode> m_records;
+        RecordStorage m_records;
         std::vector<std::pair<std::string_view, uint32_t>> m_nameList;
 
         // arena used in copying, ownedStorage used in non copying

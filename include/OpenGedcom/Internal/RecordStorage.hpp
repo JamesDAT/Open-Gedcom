@@ -28,9 +28,21 @@ namespace OpenGedcom::Internal {
         TagNode* Add(TagNode&& node);
         TagNode& At(size_t index);
         const TagNode& At(size_t index) const;
+        
+        size_t Size() const {
+            return m_offset;
+        }
 
         TagNode& operator[](const size_t index) {
             return At(index);
+        }
+
+        TagNode& Back() {
+            return At(m_offset - 1);
+        }
+
+        TagNode& Front() {
+            return At(0);
         }
 
         iterator begin();
@@ -43,7 +55,7 @@ namespace OpenGedcom::Internal {
 
 
         std::vector<std::array<TagNode, CHUNK_SIZE>> m_data;
-        size_t m_offset;
+        size_t m_offset = 0;
     };
 
     class RecordStorage::iterator {

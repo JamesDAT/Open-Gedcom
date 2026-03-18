@@ -79,9 +79,9 @@ namespace OpenGedcom {
             return TagView{this, parentNode->AddChild(std::move(node))};
         }
         else {
-            m_storage->Records().push_back(std::move(node));
+            m_storage->Records().Add(std::move(node));
 
-            return TagView{this, &m_storage->Records().back()};
+            return TagView{this, &m_storage->Records().Back()};
         }
 
     }

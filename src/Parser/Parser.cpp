@@ -142,8 +142,8 @@ namespace OpenGedcom::Internal {
 
         uint32_t tagIndex = 0;
         if(level == 0) {
-            graph.push_back(std::move(node));
-            tagIndex = graph.size() - 1;
+            graph.Add(std::move(node));
+            tagIndex = graph.Size() - 1;
         }
         else {
             TagNode* stackNode = &graph[m_stack[0]];
@@ -154,7 +154,7 @@ namespace OpenGedcom::Internal {
             
             if(m_registry->IsType<NameTag>(node)) {
                 if(m_registry->IsType<IndiTag>(graph[m_stack[0]])) {
-                    m_storage->AddName(value, graph.size() - 1);
+                    m_storage->AddName(value, graph.Size() - 1);
                 }
             }
 
