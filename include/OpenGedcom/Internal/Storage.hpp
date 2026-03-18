@@ -94,6 +94,10 @@ namespace OpenGedcom::Internal {
         
         Registry* m_registry;
 
+        // this records vector needs to be moved to a stable implementation like the StringArena.
+        // as it will be mutated at runtime if the user adds records, it could invalidate all views.
+        // a simple implementation like the StringArena would work, and indices into it can also still
+        // work like normal
         std::vector<TagNode> m_records;
         std::vector<std::pair<std::string_view, uint32_t>> m_nameList;
 

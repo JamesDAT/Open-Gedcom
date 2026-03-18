@@ -37,6 +37,7 @@ namespace OpenGedcom {
 
         std::string_view SetValue(std::string_view data);
 
+        /// @brief Get views to the children nodes
         [[nodiscard]] std::vector<TagView> GetSubViews() const {
             std::vector<TagView> children;
 
@@ -54,6 +55,10 @@ namespace OpenGedcom {
             else {
                 return m_node->GetId();
             }
+        }
+
+        void SetId(uint32_t id) {
+            m_node->SetId(id);
         }
 
     protected:

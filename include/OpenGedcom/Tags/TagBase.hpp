@@ -12,10 +12,15 @@
 
 #pragma once
 
+#include <concepts>
 namespace OpenGedcom {
     class GedcomTag {
     public:
         GedcomTag() = default;
         virtual ~GedcomTag() = default;
     };
+
+    template<typename T>
+    concept GedcomTagType =
+        std::derived_from<T, GedcomTag>;
 }

@@ -1,6 +1,7 @@
 #include <OpenGedcom/OpenGedcom.hpp>
 #include <iostream>
 #include "OpenGedcom/Tags/Events.hpp"
+#include "OpenGedcom/Tags/Records.hpp"
 #include "OpenGedcom/Views/BirthView.hpp"
 #include "SimpleReader.hpp"
 
@@ -26,6 +27,9 @@ int main() {
                 
             }
         }
+
+        auto newIndividual = doc.CreateTag<OpenGedcom::IndiTag>();
+        newIndividual.SetId(10);
     }
 
     return 0;

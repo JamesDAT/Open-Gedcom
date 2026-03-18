@@ -81,18 +81,48 @@ namespace OpenGedcom {
         /// @return New document with the parsed Gedcom data
         [[nodiscard]] static Document ParseReader(std::shared_ptr<IReader> reader, bool lazyLoad = false);
         
+        /// @brief Get an individual from their tag id
+        /// @param[in] Id of the individual, omitting the type identifier (such as 'I')
+        /// @return Returns an optional individual view depending on whether an individual with
+        /// the tag exists
         [[nodiscard]] std::optional<IndiView> GetIndividual(uint32_t id);
-        [[nodiscard]] std::vector<IndiView> GetIndividual(std::string_view name);
 
-        template<Internal::GedcomTagType T>
+        /// @brief Get all individuals with the exact name
+        ///
+        /// Finds all individuals with the exact name provided. It uses the exact character
+        /// sequence found in the gedcom file under the NAME tag, it does not search Given
+        /// names.
+        ///
+        /// @param[in] Exact name format for individuals to find
+        /// @return A vector of individual views
+        [[nodiscard]] std::vector<IndiView> GetIndividuals(std::string_view name);
+
+        [[nodiscard]] TagView CreateTag(std::string_view tag, TagView* parent = nullptr);
+
+        template<GedcomTagType T>
+        [[nodiscard]] TagView CreateTag(TagView* parent = nullptr) {
+            return CreateTag(m_registry->GetTypeString<T>(), parent);
+        }
+
+        /// @brief Check whether the tag type matches the type provided
+        ///
+        /// Checks within the registry stored in the document, make sure to only
+        /// use the document that provided the view, to ensure the correct registry
+        /// is used
+        ///
+        /// @param[in] Constant reference to a tag view
+        /// @return true if the type matches, false otherwise
+        template<GedcomTagType T>
         bool IsType(const TagView& view) {
             return m_registry->IsType<T>(*view.Get());
         }
 
+        /// @brief Get a non-owning pointer to the stored registry
         Internal::Registry* GetRegistry() {
             return m_registry.get();
         }
 
+        /// @brief Get a non-owning pointer to the internal storage
         Internal::Storage* GetStorage() {
             return m_storage.get();
         }

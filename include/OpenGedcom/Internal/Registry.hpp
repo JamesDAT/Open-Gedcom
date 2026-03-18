@@ -23,10 +23,6 @@
 #include <string_view>
 
 namespace OpenGedcom::Internal {
-    template<typename T>
-    concept GedcomTagType =
-        std::derived_from<T, GedcomTag>;
-
     class Registry {
     public:
         Registry() {
@@ -98,6 +94,21 @@ namespace OpenGedcom::Internal {
                     return string;
                 }
             }
+            return "Unknown Type";
+        }
+
+        template<GedcomTagType T>
+        std::string_view GetTypeString() const {
+            auto it = m_typeToId.find(std::type_index(typeid(T)));
+            if(it == m_typeToId.end())
+                return "Unknown Type";
+
+            for(auto& [string, id] : m_tagToId) {
+                if(it->second == id) {
+                    return string;
+                }
+            }
+
             return "Unknown Type";
         }
 

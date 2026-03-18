@@ -58,7 +58,7 @@ namespace OpenGedcom {
         return std::nullopt;
     }
 
-    std::vector<IndiView> Document::GetIndividual(std::string_view name) {
+    std::vector<IndiView> Document::GetIndividuals(std::string_view name) {
         std::vector<IndiView> views;
         for(auto& [nameView, index] : m_storage->GetNameIndices()) {
             if(nameView == name) {
@@ -67,5 +67,22 @@ namespace OpenGedcom {
         }
 
         return views;
+    }
+
+    TagView Document::CreateTag(std::string_view tag, TagView* parent) {
+        auto node = m_registry->Create(tag);
+        
+        if(parent != nullptr) {
+            auto parentNode = parent->Get();
+
+
+            return TagView{this, parentNode->AddChild(std::move(node))};
+        }
+        else {
+            m_storage->Records().push_back(std::move(node));
+
+            return TagView{this, &m_storage->Records().back()};
+        }
+
     }
 }
