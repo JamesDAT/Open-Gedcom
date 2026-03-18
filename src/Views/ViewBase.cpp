@@ -6,6 +6,8 @@
 
 namespace OpenGedcom {
     std::string_view TagView::SetValue(std::string_view data) {
-        return m_document->GetStorage()->AddString(data);
+        auto value = m_document->GetStorage()->AddString(data);
+        m_node->SetData(value);
+        return value;
     }  
 }

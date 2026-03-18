@@ -3,6 +3,7 @@
 #include "OpenGedcom/Tags/Events.hpp"
 #include "OpenGedcom/Tags/Records.hpp"
 #include "OpenGedcom/Views/BirthView.hpp"
+#include "OpenGedcom/Views/IndiView.hpp"
 #include "SimpleReader.hpp"
 
 int main() {
@@ -27,9 +28,22 @@ int main() {
                 
             }
         }
+    }
 
-        auto newIndividual = doc.CreateTag<OpenGedcom::IndiTag>();
-        newIndividual.SetId(10);
+    auto newIndividual = OpenGedcom::IndiView{&doc, doc.CreateTag<OpenGedcom::IndiTag>().Get()};
+    newIndividual.SetId(10);
+    newIndividual.SetName("Test", "Name");
+    newIndividual.SetGivenName("Test Given");
+    newIndividual.SetSex('M');
+
+    if(auto name = newIndividual.Name()) {
+        std::cout << "Pushed Name: " << name.value() << '\n';
+    }
+    if(auto given = newIndividual.GivenName()) {
+        std::cout << "Pushed Given: " << given.value() << '\n';
+    }
+    if(auto sex = newIndividual.Sex()) {
+        std::cout << "Pushed Sex: " << sex.value() << '\n';
     }
 
     return 0;

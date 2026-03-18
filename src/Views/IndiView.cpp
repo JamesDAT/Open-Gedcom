@@ -5,11 +5,62 @@
 #include "OpenGedcom/OpenGedcom.hpp"
 #include "TagTreeParser.hpp"
 
+#include <format>
+
 namespace OpenGedcom {
     using namespace OpenGedcom::Internal;
 
     std::optional<std::string_view> IndiView::Name() const {
         return GetValueFromFirstOfType<NameTag>(m_document->GetRegistry(), m_node->GetChildren());
+    }
+
+    TagView IndiView::SetName(std::string firstName, std::string lastName) {
+        return SetName(std::format("{} /{}/", firstName, lastName));
+    }
+
+    TagView IndiView::SetName(std::string name) {
+        if(auto nameTag = GetFirstOfType<NameTag>(m_document->GetRegistry(), m_node->GetChildren())) {
+            auto nameView = TagView{m_document, nameTag.value()};
+            nameView.SetValue(name);
+
+            return nameView;
+        }
+        else {
+            auto nameView = m_document->CreateTag<NameTag>(this);
+            nameView.SetValue(name);
+
+            return nameView;
+        }
+    }
+
+    TagView IndiView::SetGivenName(std::string given) {
+        if(auto givenTag = GetFirstOfType<GivenNamesTag>(m_document->GetRegistry(), m_node->GetChildren())) {
+            auto givenView = TagView{m_document, givenTag.value()};
+            givenView.SetValue(given);
+
+            return givenView;
+        }
+        else {
+            auto givenView = m_document->CreateTag<GivenNamesTag>(this);
+            givenView.SetValue(given);
+
+            return givenView;
+        }
+    }
+
+    TagView IndiView::SetSex(char sex) {
+        if(auto sexTag = GetFirstOfType<SexTag>(m_document->GetRegistry(), m_node->GetChildren())) {
+            auto sexView = TagView{m_document, sexTag.value()};
+            sexView.SetValue(std::string{sex});
+
+            return sexView;
+        }
+        else {
+            auto sexView = m_document->CreateTag<SexTag>(this);
+            sexView.SetValue(std::string{sex});
+
+            return sexView;
+        }
     }
 
     std::optional<std::string_view> IndiView::GivenName() const {
