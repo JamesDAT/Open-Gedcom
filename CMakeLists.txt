@@ -31,6 +31,7 @@ target_sources(OpenGedcom
         ${PUBLIC_INCLUDE}/Internal/Registry.hpp
         ${PUBLIC_INCLUDE}/Internal/Storage.hpp
         ${PUBLIC_INCLUDE}/Internal/StringArena.hpp
+        ${PUBLIC_INCLUDE}/Internal/RecordStorage.hpp
 
         ${PUBLIC_INCLUDE}/Tags/TagBase.hpp
         ${PUBLIC_INCLUDE}/Tags/TagTraits.hpp
@@ -47,6 +48,7 @@ target_sources(OpenGedcom
         src/OpenGedcom.cpp
         src/Internal/Storage.cpp
         src/Internal/StringArena.cpp
+        src/Internal/RecordStorage.cpp
 
         ${Parser_Files}
         ${Views_Files}

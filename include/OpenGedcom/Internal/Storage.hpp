@@ -15,6 +15,8 @@
 #include "TagNode.hpp"
 #include "StringArena.hpp"
 
+#include "RecordStorage.hpp"
+
 //std
 #include <cstddef>
 #include <iostream>
