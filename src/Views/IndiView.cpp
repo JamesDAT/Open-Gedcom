@@ -10,6 +10,12 @@
 namespace OpenGedcom {
     using namespace OpenGedcom::Internal;
 
+    IndiView::IndiView(const TagView& base) 
+        : TagView(base)
+    {
+
+    }
+
     std::optional<std::string_view> IndiView::Name() const {
         return GetValueFromFirstOfType<NameTag>(m_document->GetRegistry(), m_node->GetChildren());
     }
@@ -33,7 +39,17 @@ namespace OpenGedcom {
         }
     }
 
+    std::optional<std::string_view> IndiView::NamePrefix() const {
+        return std::nullopt;
+    }
+
+    TagView IndiView::SetNamePrefix(std::string_view prefix) {
+        return TagView{m_document, m_node}; // invalid placeholder
+    }
+
     TagView IndiView::SetGivenName(std::string given) {
+        auto nameTag = GetFirstOfType<NameTag>(m_document->GetRegistry(), m_node->GetChildren());
+
         if(auto givenTag = GetFirstOfType<GivenNamesTag>(m_document->GetRegistry(), m_node->GetChildren())) {
             auto givenView = TagView{m_document, givenTag.value()};
             givenView.SetValue(given);

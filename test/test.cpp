@@ -30,7 +30,7 @@ int main() {
         }
     }
 
-    auto newIndividual = OpenGedcom::IndiView{&doc, doc.CreateTag<OpenGedcom::IndiTag>().Get()};
+    auto newIndividual = OpenGedcom::IndiView{doc.CreateTag<OpenGedcom::IndiTag>()};
     newIndividual.SetId(10);
     newIndividual.SetName("Test", "Name");
     newIndividual.SetGivenName("Test Given");

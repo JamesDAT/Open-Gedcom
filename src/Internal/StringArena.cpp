@@ -15,6 +15,7 @@ namespace OpenGedcom::Internal {
 
     std::string_view StringArena::Store(std::string_view src) {
         if(src.empty()) return {};
+        if(src.size() > CHUNK_SIZE) return {}; // invalid, src should not be larger than a cunk
 
         if(m_chunks.empty() || m_offset + src.size() > CHUNK_SIZE) {
             m_chunks.reserve(CHUNK_SIZE);
