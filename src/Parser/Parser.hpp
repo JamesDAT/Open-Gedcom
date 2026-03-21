@@ -13,26 +13,52 @@
  */
 
 #pragma once
-#include "OpenGedcom/Internal/Storage.hpp"
-#include "OpenGedcom/Internal/Registry.hpp"
 
 // std
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <string_view>
 #include <vector>
 
 namespace OpenGedcom::Internal {
+    struct TagInfo {
+        uint32_t level;
+        std::string_view xref;
+        std::string_view tag;
+        std::string_view value;
+    };
+
+    struct DocumentInfo {
+        size_t recordCount;
+        size_t storageSizeEstimate;
+    };
+
     class Parser {
     public:
-        Parser(Storage* storage, Registry* registry, bool makeCopies);
+        Parser();
         ~Parser();
 
         void Parse(const std::string_view data);
 
+        void BindDocumentBegin(const std::function<void(DocumentInfo)>& func) {
+            m_documentBegin = func;
+        }
+
+        void BindDocumentEnd(const std::function<void()>& func) {
+            m_documentEnd = func;
+        }
+
+        void BindTagBegin(const std::function<void(TagInfo)>& func) {
+            m_onTagBegin = func;
+        }
+
+        void BindTagEnd(const std::function<void(uint32_t level)>& func) {
+            m_onTagEnd = func;
+        }
+
     private:
         void ParseLine(const std::string_view data);
-        void CreateTag(uint32_t level, uint32_t xref, std::string_view tag, std::string_view value);
 
         inline size_t EstimateLineCount(size_t bytes) const {
             return bytes / 32 + 8; // rough estimate of 32 bytes per line on average
@@ -42,15 +68,13 @@ namespace OpenGedcom::Internal {
             return dataSize / 2; // gedcom files are roughly 50% useful data
         }
 
-
-        Storage* m_storage;
-        Registry* m_registry;
-
-        const bool m_makeCopies;
-
         std::vector<uint32_t> m_lineInfo{};
-        size_t m_recordCount = 0; // used to reserve record storage
 
-        std::vector<uint32_t> m_stack; // stack of indices
+        uint32_t m_currentTagLevel = 0;
+
+        std::function<void(DocumentInfo)> m_documentBegin; // handler after the parser has scanned the document, before parsing
+        std::function<void()> m_documentEnd;
+        std::function<void(TagInfo)> m_onTagBegin; // beginning of a tag structure
+        std::function<void(uint32_t level)> m_onTagEnd; 
     };
 }

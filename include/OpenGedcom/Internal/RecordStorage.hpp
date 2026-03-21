@@ -21,7 +21,10 @@ namespace OpenGedcom::Internal {
         ~RecordStorage();
 
         RecordStorage(const RecordStorage&) = delete;
+        RecordStorage operator=(const RecordStorage&) = delete;
+
         RecordStorage(RecordStorage&&) noexcept = default;
+        RecordStorage& operator=(RecordStorage&&) noexcept = default;
 
         void Reserve(size_t minElements);
 

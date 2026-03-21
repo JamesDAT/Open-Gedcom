@@ -8,7 +8,5 @@
 namespace OpenGedcom {
     using namespace OpenGedcom::Internal;
 
-    std::string_view PlaceView::Place() const {
-        return m_node->GetData();
-    }
+    
 }

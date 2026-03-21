@@ -15,10 +15,10 @@
 namespace OpenGedcom::Internal {
 
     template<GedcomTagType T>
-    static std::optional<std::string_view> GetValueFromFirstOfType(Registry* registry, std::span<TagNode> nodes) {
+    static std::optional<std::string_view> GetValueFromFirstOfType(const Registry& registry, std::span<TagNode*> nodes) {
         for(auto& node : nodes) {
-            if(registry->IsType<T>(node)) {
-                return node.GetData();
+            if(registry.IsType<T>(node)) {
+                return node->GetData();
             }
         }
 
@@ -26,10 +26,10 @@ namespace OpenGedcom::Internal {
     }
 
     template<GedcomTagType T>
-    static std::optional<TagNode*> GetFirstOfType(Registry* registry, std::span<TagNode> nodes) {
+    static std::optional<TagNode*> GetFirstOfType(const Registry& registry, std::span<TagNode*> nodes) {
         for(auto& node : nodes) {
-            if(registry->IsType<T>(node)) {
-                return &node;
+            if(registry.IsType<T>(node)) {
+                return node;
             }
         }
 

@@ -27,8 +27,8 @@ namespace OpenGedcom {
             : m_document(doc), m_node(node) {}
         virtual ~TagView() {}
 
-        TagView(const TagView& other);
-        TagView& operator=(const TagView& other);
+        TagView(const TagView& other) = default;
+        TagView& operator=(const TagView& other) = default;
 
         TagView(TagView&&) noexcept = default;
 
@@ -40,12 +40,12 @@ namespace OpenGedcom {
             return m_node->GetData();
         }
 
-        std::string_view SetValue(std::string_view data);
+        //std::string_view SetValue(std::string_view data) {}
 
         /// @brief Get views to the children nodes
-        [[nodiscard]] std::vector<TagView> GetSubViews() const;
+        //[[nodiscard]] std::vector<TagView> GetSubViews() const {}
 
-        [[nodiscard]] std::optional<uint32_t> Id() const;
+        //[[nodiscard]] std::optional<uint32_t> Id() const {}
 
         void SetId(uint32_t id) {
             m_node->SetId(id);

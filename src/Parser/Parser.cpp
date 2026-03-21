@@ -3,13 +3,10 @@
 
 #include "Parser.hpp"
 #include <cctype>
+#include <iostream>
 
 namespace OpenGedcom::Internal {
-    Parser::Parser(Storage* storage, Registry* registry, bool makeCopies)
-        :   m_storage(storage),
-        m_registry(registry),
-        m_makeCopies(makeCopies)
-    {
+    Parser::Parser() {
 
     }
 
@@ -17,19 +14,33 @@ namespace OpenGedcom::Internal {
 
     }
 
-    void Parser::Parse(const std::string_view data) {
+    void Parser::Parse(std::string_view data) {
+        if(data.empty()) {
+            std::cerr << "[OpenGedcom] Provided Data Was Empty";
+            return;
+        }
+
+        // if file doesn't begin with 0 HEAD then it has a BOM
+        if(data[0] != '0') {
+            auto offset = data.find_first_of('0');
+            data = std::string_view(data.begin() + offset, data.size() - offset);
+        }
+
         m_lineInfo.reserve(EstimateLineCount(data.size()));
+        size_t recordCount = 0;
 
         for(size_t i = 0; i < data.size(); ++i) {
             if(data[i] == '\n') {
                 m_lineInfo.push_back(i); // downsize to uint32_t
                 if(i + 1 < data.size() && data[i+1] == '0') {
-                    ++m_recordCount;
+                    ++recordCount;
                 }
             }
         }
 
-        m_storage->ReserveRecords(m_recordCount);
+        m_documentBegin({
+            .recordCount = recordCount, 
+            .storageSizeEstimate = EstimateStorageSize(data.size())});
 
         // parse lines
         size_t lineStart = 0;
@@ -47,12 +58,12 @@ namespace OpenGedcom::Internal {
                                             data.size() - lineStart));
         }
 
-        m_stack.clear();
+        m_documentEnd();
     }
 
     void Parser::ParseLine(const std::string_view line) {
         uint32_t level = 0;
-        uint32_t xref = UINT32_MAX;
+        std::string_view xref;
         std::string_view tag;
         std::string_view value;
 
@@ -66,6 +77,8 @@ namespace OpenGedcom::Internal {
         }
         else {
             // blank line, or just invalid, they must start with a level number
+            std::cerr << "[OpenGedcom] Invalid Line Detected. Lines Must Begin With a Number\n";
+            std::cerr << "\tLine: " << line << '\n' << std::endl;
             return;
         }
 
@@ -84,15 +97,7 @@ namespace OpenGedcom::Internal {
                 ++it;
             }
 
-            // convert the digits between idBegin and it to an integer
-            if (it != idBegin) {
-                xref = 0;
-                for (auto iter = idBegin; iter != it; ++iter) {
-                    if (std::isdigit(*iter)) {
-                        xref = xref * 10 + (*iter - '0'); // char to int, moving the existing digits up by 1 place each time
-                    }
-                }
-            }
+            xref = std::string_view(idBegin, std::distance(idBegin, it));
 
             if (it != end && *it == '@') {
                 ++it; // skip the closing '@'
@@ -121,48 +126,29 @@ namespace OpenGedcom::Internal {
             value = std::string_view(&*it, std::distance(it, end - 1)); // remove newline character from end
         }
 
-        if(m_makeCopies) {
-            auto copyView = m_storage->AddString(value);
-            CreateTag(level, xref, tag, copyView);
-        }
-        else {
-            CreateTag(level, xref, tag, value);
-        }
-    }
+        if(level > m_currentTagLevel + 1) { // tag jumped
+            std::cerr << "[OpenGedcom] Gedcom Hierarchy Skip Found:\n";
+            std::cerr << "\tLast Tag Level: " << m_currentTagLevel << '\n';
+            std::cerr << "\tLine: " << line << '\n' << std::endl;
+            uint32_t jumpCount = level - m_currentTagLevel + 1;
 
-    void Parser::CreateTag(uint32_t level, uint32_t xref, std::string_view tag, std::string_view value) {
-        auto& graph = m_storage->Records();
-        TagNode node = m_registry->Create(tag);
-
-        node.SetId(xref);
-        node.SetData(value);
-
-        // resize stack to current level
-        m_stack.resize(level + 1);
-
-        uint32_t tagIndex = 0;
-        if(level == 0) {
-            graph.Add(std::move(node));
-            tagIndex = graph.Size() - 1;
-        }
-        else {
-            TagNode* stackNode = &graph[m_stack[0]];
-
-            for(uint32_t i = 1; i < level; ++i) {
-                stackNode = &stackNode->GetChildren()[m_stack[i]];
+            for(int i = 1; i <= jumpCount; ++i) {
+                m_onTagBegin({
+                    .level = level + i,
+                    .tag = "_INVALID",
+                    .value = "Line Skip Detected"});
             }
-            
-            if(m_registry->IsType<NameTag>(node)) {
-                if(m_registry->IsType<IndiTag>(graph[m_stack[0]])) {
-                    m_storage->AddName(value, graph.Size() - 1);
-                }
-            }
-
-            stackNode->AddChild(std::move(node));
-            tagIndex = stackNode->GetChildren().size() - 1;
-
         }
 
-        m_stack[level] = tagIndex;
+        if(level <= m_currentTagLevel) {
+            m_onTagEnd(level);
+        }
+        m_currentTagLevel = level;
+
+        m_onTagBegin({
+            .level = level, 
+            .xref = xref, 
+            .tag = tag, 
+            .value = value});
     }
 }

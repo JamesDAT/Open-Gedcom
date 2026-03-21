@@ -15,7 +15,7 @@ namespace OpenGedcom {
     public:
         using TagView::TagView;
 
-        [[nodiscard]] std::string_view Place() const;
+        //[[nodiscard]] std::string_view Place() const {}
 
     private:
 

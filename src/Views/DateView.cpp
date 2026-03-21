@@ -9,11 +9,5 @@
 namespace OpenGedcom {
     using namespace OpenGedcom::Internal;
 
-    std::string_view DateView::Date() const {
-        return m_node->GetData();
-    }
-
-    std::optional<std::string_view> DateView::Time() const {
-        return GetValueFromFirstOfType<TimeTag>(m_document->GetRegistry(), m_node->GetChildren());
-    }
+    
 }

@@ -5,13 +5,13 @@
 
 #include "OpenGedcom/Views/IndiView.hpp"
 #include "Parser/Parser.hpp"
+#include <cassert>
+#include <cctype>
 
 namespace OpenGedcom {
     using namespace Internal;
 
-    Document::Document(std::unique_ptr<Internal::Registry> registry, std::unique_ptr<Internal::Storage> storage) {
-        m_registry = std::move(registry);
-        m_storage = std::move(storage);
+    Document::Document() {
         
     }
 
@@ -19,37 +19,91 @@ namespace OpenGedcom {
         
     }
 
-    Document Document::ParseDOM(std::string&& data) {
-        auto registry = std::make_unique<Registry>();
-        auto storage = std::make_unique<Storage>(registry.get(), std::move(data));
+    Document Document::Parse(std::string_view data) {
+        Document doc{};
+        std::vector<TagNode*> parseStack;
 
-        Parser parser{storage.get(), registry.get(), false};
-        parser.Parse(storage->GetOwnedString());
+        Parser parser{};
 
-        return {std::move(registry), std::move(storage)};
-    }
+        parser.BindDocumentBegin([&doc](DocumentInfo info){
+            
+        });
 
-    Document Document::ParseCopy(std::string_view data) {
-        auto registry = std::make_unique<Registry>();
-        auto storage = std::make_unique<Storage>(registry.get());
+        parser.BindTagBegin([&doc, &parseStack](TagInfo info){
+            assert(parseStack.size() == info.level); // these should never mismatch, parser bug if this occurs
 
-        Parser parser{storage.get(), registry.get(), true};
+            std::string_view value = info.value;
+            
+            // Name is special as it is used for fuzzy finding
+            if(info.tag == "NAME") {
+                value = doc.m_names.Store(info.value);
+            }
+            else if(!value.empty()) {
+                value = doc.m_values.Store(info.value);
+            }
+
+
+
+            TagNode node = doc.m_registry.Create(info.tag);
+            uint32_t xref = UINT32_MAX;
+
+            // compute xref
+            if(!info.xref.empty()) {
+                xref = 0;
+
+                for(auto character : info.xref) {
+                    if(std::isdigit(static_cast<unsigned char>(character))) {
+                        xref = xref * 10 + (character - '0'); // char to int, moving the existing digits up by 1 place each time
+                    }
+                }
+            }
+
+            
+            
+            node.SetId(xref);
+            node.SetData(value);
+            
+            TagNode* tagPtr = nullptr;
+            
+            if(info.level == 0) {
+                doc.m_records.push_back(std::move(node));
+                tagPtr = &doc.m_records.back();
+            }
+            else {
+                doc.m_tags.push_back(std::move(node));
+                tagPtr = &doc.m_tags.back();
+                
+                auto parent = parseStack.back();
+
+                parent->AddChild(tagPtr);
+            }
+
+            parseStack.push_back(tagPtr);
+        });
+
+        parser.BindTagEnd([&parseStack](uint32_t level) {
+            parseStack.resize(level);
+        });
+
+        parser.BindDocumentEnd([](){
+
+        });
+
+
         parser.Parse(data);
-
-        return {std::move(registry), std::move(storage)};
+        return doc;
     }
 
     Document Document::ParseReader(std::shared_ptr<IReader> reader, bool lazyLoad) {
-        auto registry = std::make_unique<Registry>();
-        auto storage = std::make_unique<Storage>(registry.get());
+        Document doc{};
 
-        Parser parser{storage.get(), registry.get(), true};
+        Parser parser{};
 
-        return {std::move(registry), std::move(storage)};
+        return doc;
     }
 
     std::optional<IndiView> Document::GetIndividual(uint32_t id) {
-        for(auto& record : m_storage->Records()) {
+        for(auto& record : m_records) {
             if(record.GetId() == id) {
                 return IndiView{this, &record};
             }
@@ -60,28 +114,26 @@ namespace OpenGedcom {
 
     std::vector<IndiView> Document::GetIndividuals(std::string_view name) {
         std::vector<IndiView> views;
-        for(auto& [nameView, index] : m_storage->GetNameIndices()) {
-            if(nameView == name) {
-                views.push_back(IndiView{this, &m_storage->Records()[index]});
-            }
-        }
+        
 
         return views;
     }
 
     TagView Document::CreateTag(std::string_view tag, TagView* parent) {
-        auto node = m_registry->Create(tag);
+        auto node = m_registry.Create(tag);
+        m_tags.push_back(std::move(node));
+        auto nodePtr = &m_tags.back();
         
         if(parent != nullptr) {
             auto parentNode = parent->Get();
+            parentNode->AddChild(nodePtr);
 
-
-            return TagView{this, parentNode->AddChild(std::move(node))};
+            return TagView{this, nodePtr};
         }
         else {
-            m_storage->Records().Add(std::move(node));
+            m_records.push_back(std::move(node));
 
-            return TagView{this, &m_storage->Records().Back()};
+            return TagView{this, &m_records.back()};
         }
 
     }

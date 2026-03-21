@@ -29,7 +29,6 @@ target_sources(OpenGedcom
 
         ${PUBLIC_INCLUDE}/Internal/OpenGedcom.ipp
         ${PUBLIC_INCLUDE}/Internal/Registry.hpp
-        ${PUBLIC_INCLUDE}/Internal/Storage.hpp
         ${PUBLIC_INCLUDE}/Internal/StringArena.hpp
         ${PUBLIC_INCLUDE}/Internal/RecordStorage.hpp
 
@@ -46,7 +45,6 @@ target_sources(OpenGedcom
 
     PRIVATE
         src/OpenGedcom.cpp
-        src/Internal/Storage.cpp
         src/Internal/StringArena.cpp
         src/Internal/RecordStorage.cpp
 
@@ -64,8 +62,6 @@ target_include_directories(OpenGedcom
 )
 
 target_compile_features(OpenGedcom PUBLIC cxx_std_20)
-
-option(OPENGEDCOM_BUILD_TESTS "Build OpenGedcom tests" OFF)
 
 if (OPENGEDCOM_BUILD_TESTS)
     target_compile_definitions(OpenGedcom PRIVATE OPENGEDCOM_BUILD_TESTS)

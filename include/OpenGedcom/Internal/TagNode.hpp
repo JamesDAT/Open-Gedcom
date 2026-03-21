@@ -18,9 +18,9 @@
 
 #include <cstdint>
 #include <memory>
+#include <span>
 #include <string_view>
 #include <vector>
-#include <span>
 
 namespace OpenGedcom::Internal {
     using TagType = uint8_t;
@@ -58,16 +58,15 @@ namespace OpenGedcom::Internal {
             m_data = data;
         }
 
-        TagNode* AddChild(TagNode&& child) {
+        void AddChild(TagNode* child) {
             if(m_children == nullptr) {
-                m_children = std::make_unique<std::vector<TagNode>>();
+                m_children = std::make_unique<std::vector<TagNode*>>();
             }
 
-            m_children->push_back(std::move(child));
-            return &m_children->back();
+            m_children->push_back(child);
         }
 
-        std::span<TagNode> GetChildren() const {
+        std::span<TagNode*> GetChildren() const {
             if(m_children == nullptr) {
                 return {};
             }
@@ -77,7 +76,7 @@ namespace OpenGedcom::Internal {
 
     private:
         std::string_view m_data;
-        std::unique_ptr<std::vector<TagNode>> m_children = nullptr;
+        std::unique_ptr<std::vector<TagNode*>> m_children = nullptr;
 
         uint32_t m_id = INVALID_ID;
 

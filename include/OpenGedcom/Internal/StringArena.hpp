@@ -22,6 +22,12 @@ namespace OpenGedcom::Internal {
         StringArena();
         ~StringArena();
 
+        StringArena(const StringArena&) = delete;
+        StringArena& operator=(const StringArena&) = delete;
+
+        StringArena(StringArena&&) noexcept = default;
+        StringArena& operator=(StringArena&&) noexcept = default;
+
         std::string_view Store(std::string_view src);
         
     private:

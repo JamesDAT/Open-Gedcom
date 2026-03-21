@@ -16,7 +16,8 @@
 #include "IReader.hpp"
 
 #include "Internal/Registry.hpp"
-#include "Internal/Storage.hpp"
+#include "Internal/StringArena.hpp"
+#include "Internal/RecordStorage.hpp"
 
 // tags
 #include "Tags/GedcomTags.hpp"
@@ -25,6 +26,7 @@
 #include "Views/GedcomViews.hpp"
 
 // std
+#include <deque>
 #include <optional>
 #include <string>
 #include <memory>
@@ -35,7 +37,7 @@ namespace OpenGedcom {
     public:
 
         // Documents should be created through the static Parse functions
-        Document(std::unique_ptr<Internal::Registry> registry, std::unique_ptr<Internal::Storage> storage);
+        Document();
         ~Document();
 
         // Prevent accidental copies, Document stores unique ownership objects
@@ -48,17 +50,6 @@ namespace OpenGedcom {
 
         /// @brief Parse Gedcom string into a new Document.
         ///
-        /// ParseDOM will keep the whole Gedcom file in memory,
-        /// it is extremely fast, zero copy, but has high memory usage
-        ///
-        /// @param[in] std::string rvalue, storage takes ownership of the string.
-        /// @warning Do not pass temporary string literal, create a string object
-        /// and move it in.
-        /// @return New document with the parsed Gedcom data
-        [[nodiscard]] static Document ParseDOM(std::string&& data);
-
-        /// @brief Parse Gedcom string into a new Document.
-        ///
         /// ParseCopy does not take ownership of the Gedcom string,
         /// instead it copies data as needed. It is slower than ParseDOM
         /// due to copies, and has high peak memory usage, but does not
@@ -66,7 +57,7 @@ namespace OpenGedcom {
         ///
         /// @param[in] std::string_view, zero copy view of the data
         /// @return New document with the parsed Gedcom data
-        [[nodiscard]] static Document ParseCopy(std::string_view data);
+        [[nodiscard]] static Document Parse(std::string_view data);
 
         /// @brief Parse Gedcom strings into a new Document.
         ///
@@ -101,7 +92,7 @@ namespace OpenGedcom {
 
         template<GedcomTagType T>
         [[nodiscard]] TagView CreateTag(TagView* parent = nullptr) {
-            return CreateTag(m_registry->GetTypeString<T>(), parent);
+            return CreateTag(m_registry.GetTypeString<T>(), parent);
         }
 
         /// @brief Check whether the tag type matches the type provided
@@ -114,23 +105,29 @@ namespace OpenGedcom {
         /// @return true if the type matches, false otherwise
         template<GedcomTagType T>
         bool IsType(const TagView& view) {
-            return m_registry->IsType<T>(*view.Get());
+            return m_registry.IsType<T>(*view.Get());
+        }
+
+        bool HasTrait(const TagView& view, TagTraits trait) {
+            return m_registry.HasTrait(*view.Get(), trait);
         }
 
         /// @brief Get a non-owning pointer to the stored registry
-        Internal::Registry* GetRegistry() {
-            return m_registry.get();
-        }
-
-        /// @brief Get a non-owning pointer to the internal storage
-        Internal::Storage* GetStorage() {
-            return m_storage.get();
+        Internal::Registry& GetRegistry() {
+            return m_registry;
         }
 
     private:
         // cannot be forward declared due to use in templates
-        std::unique_ptr<Internal::Registry> m_registry;
-        std::unique_ptr<Internal::Storage> m_storage;
+        Internal::Registry m_registry;
+
+        // ownership storage for value and name strings
+        Internal::StringArena m_values;
+        Internal::StringArena m_names;
+        
+        // records are defined as level 0 tags, tags are any non level 0
+        std::deque<Internal::TagNode> m_records;
+        std::deque<Internal::TagNode> m_tags;
 
     };
 }

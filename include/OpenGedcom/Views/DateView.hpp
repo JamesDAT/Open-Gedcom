@@ -15,8 +15,8 @@ namespace OpenGedcom {
     public:
         using TagView::TagView;
 
-        [[nodiscard]] std::string_view Date() const;
-        [[nodiscard]] std::optional<std::string_view> Time() const;
+        //[[nodiscard]] std::string_view Date() const {}
+        //[[nodiscard]] std::optional<std::string_view> Time() const {}
 
     private:
 
