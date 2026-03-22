@@ -41,6 +41,7 @@ namespace OpenGedcom {
     class IndiTag final : public RecordTag {
     public:
         static constexpr std::string_view TagName = "INDI";
+        static constexpr char RefChar = 'I';
 
         using RecordTag::RecordTag;
     };
@@ -50,6 +51,7 @@ namespace OpenGedcom {
     class FamilyTag final : public RecordTag {
     public:
         static constexpr std::string_view TagName = "FAM";
+        static constexpr char RefChar = 'F';
 
         using RecordTag::RecordTag;
     };
@@ -59,6 +61,7 @@ namespace OpenGedcom {
     class SourceTag final : public RecordTag {
     public:
         static constexpr std::string_view TagName = "SOUR";
+        static constexpr char RefChar = 'S';
 
         using RecordTag::RecordTag;
     };
@@ -68,6 +71,7 @@ namespace OpenGedcom {
     class RepoTag final : public RecordTag {
     public:
         static constexpr std::string_view TagName = "REPO";
+        static constexpr char RefChar = 'R';
 
         using RecordTag::RecordTag;
     };
@@ -77,6 +81,7 @@ namespace OpenGedcom {
     class SubmitterTag final : public RecordTag {
     public:
         static constexpr std::string_view TagName = "SUBM";
+        static constexpr char RefChar = 'U';
 
         using RecordTag::RecordTag;
     };
@@ -86,6 +91,7 @@ namespace OpenGedcom {
     class ObjectTag final : public RecordTag {
     public:
         static constexpr std::string_view TagName = "OBJE";
+        static constexpr char RefChar = 'M';
 
         using RecordTag::RecordTag;
     };

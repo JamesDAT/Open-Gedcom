@@ -17,7 +17,7 @@
 
 #include "Internal/Registry.hpp"
 #include "Internal/StringArena.hpp"
-#include "Internal/RecordStorage.hpp"
+#include "Internal/Xref.hpp"
 
 // tags
 #include "Tags/GedcomTags.hpp"
@@ -27,10 +27,12 @@
 
 // std
 #include <deque>
+#include <functional>
 #include <optional>
-#include <string>
 #include <memory>
+#include <unordered_map>
 #include <vector>
+#include <string_view>
 
 namespace OpenGedcom {
     class Document {
@@ -112,23 +114,33 @@ namespace OpenGedcom {
             return m_registry.HasTrait(*view.Get(), trait);
         }
 
-        /// @brief Get a non-owning pointer to the stored registry
+        /// @brief Get the stored registry
         Internal::Registry& GetRegistry() {
             return m_registry;
         }
 
+        [[nodiscard]] std::string GetGedcomString();
+
     private:
+        void ConvertNodeRecursive(int level, std::string& mutString, const Internal::TagNode& node);
+
         // cannot be forward declared due to use in templates
-        Internal::Registry m_registry;
+        Internal::Registry m_registry{};
 
         // ownership storage for value and name strings
-        Internal::StringArena m_values;
-        Internal::StringArena m_names;
+        Internal::StringArena m_values{};
+        Internal::StringArena m_names{};
         
         // records are defined as level 0 tags, tags are any non level 0
-        std::deque<Internal::TagNode> m_records;
-        std::deque<Internal::TagNode> m_tags;
+        std::deque<Internal::TagNode> m_records{};
+        std::deque<Internal::TagNode> m_tags{};
 
+        // cross pointers
+        std::unordered_map<XrefType, Internal::TagNode*> m_xrefs{};
+        
+        // initialized based off originial document, and grown when new elements are pushed
+        // it is not exact and is used to reduce allocations when saving
+        size_t m_documentSizeEstimate = 0; 
     };
 }
 

@@ -20,6 +20,7 @@ namespace OpenGedcom {
     class NoteTag final : public GedcomTag {
     public:
         static constexpr std::string_view TagName = "NOTE";
+        static constexpr char RefChar = 'N';
 
         using GedcomTag::GedcomTag;
     };

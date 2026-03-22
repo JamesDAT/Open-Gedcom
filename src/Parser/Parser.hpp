@@ -57,6 +57,10 @@ namespace OpenGedcom::Internal {
             m_onTagEnd = func;
         }
 
+        void BindError(const std::function<void(std::string_view error)>& func) {
+            m_onError = func;
+        }
+
     private:
         void ParseLine(const std::string_view data);
 
@@ -75,6 +79,7 @@ namespace OpenGedcom::Internal {
         std::function<void(DocumentInfo)> m_documentBegin; // handler after the parser has scanned the document, before parsing
         std::function<void()> m_documentEnd;
         std::function<void(TagInfo)> m_onTagBegin; // beginning of a tag structure
-        std::function<void(uint32_t level)> m_onTagEnd; 
+        std::function<void(uint32_t level)> m_onTagEnd;
+        std::function<void(std::string_view error)> m_onError;
     };
 }

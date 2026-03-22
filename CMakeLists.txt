@@ -31,6 +31,7 @@ target_sources(OpenGedcom
         ${PUBLIC_INCLUDE}/Internal/Registry.hpp
         ${PUBLIC_INCLUDE}/Internal/StringArena.hpp
         ${PUBLIC_INCLUDE}/Internal/RecordStorage.hpp
+        ${PUBLIC_INCLUDE}/Internal/Xref.hpp
 
         ${PUBLIC_INCLUDE}/Tags/TagBase.hpp
         ${PUBLIC_INCLUDE}/Tags/TagTraits.hpp

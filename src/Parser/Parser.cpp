@@ -4,6 +4,7 @@
 #include "Parser.hpp"
 #include <cctype>
 #include <iostream>
+#include <format>
 
 namespace OpenGedcom::Internal {
     Parser::Parser() {
@@ -16,7 +17,7 @@ namespace OpenGedcom::Internal {
 
     void Parser::Parse(std::string_view data) {
         if(data.empty()) {
-            std::cerr << "[OpenGedcom] Provided Data Was Empty";
+            m_onError("[OpenGedcom] Provided Data Was Empty");
             return;
         }
 
@@ -63,9 +64,9 @@ namespace OpenGedcom::Internal {
 
     void Parser::ParseLine(const std::string_view line) {
         uint32_t level = 0;
-        std::string_view xref;
-        std::string_view tag;
-        std::string_view value;
+        std::string_view xref{};
+        std::string_view tag{};
+        std::string_view value{};
 
         auto it = line.begin();
         auto end = line.end();
@@ -77,8 +78,7 @@ namespace OpenGedcom::Internal {
         }
         else {
             // blank line, or just invalid, they must start with a level number
-            std::cerr << "[OpenGedcom] Invalid Line Detected. Lines Must Begin With a Number\n";
-            std::cerr << "\tLine: " << line << '\n' << std::endl;
+            m_onError(std::format("[OpenGedcom] Invalid Line Detected. Lines Must Begin With a Number\n\tLine: {}", line));
             return;
         }
 
@@ -123,14 +123,20 @@ namespace OpenGedcom::Internal {
 
         // value
         if(it != end) {
-            value = std::string_view(&*it, std::distance(it, end - 1)); // remove newline character from end
+            auto valEnd = end;
+
+            // trim trailing whitespace
+            while (valEnd > it && (std::isspace(static_cast<unsigned char>(*(valEnd - 1))) || *(valEnd - 1) == '\r')) {
+                --valEnd;
+            }
+
+            value = std::string_view(&*it, std::distance(it, valEnd));
         }
 
         if(level > m_currentTagLevel + 1) { // tag jumped
-            std::cerr << "[OpenGedcom] Gedcom Hierarchy Skip Found:\n";
-            std::cerr << "\tLast Tag Level: " << m_currentTagLevel << '\n';
-            std::cerr << "\tLine: " << line << '\n' << std::endl;
-            uint32_t jumpCount = level - m_currentTagLevel + 1;
+            m_onError(std::format("[OpenGedcom] Gedcom Hierarchy Skip Found:\n\tLast Tag Level: {}\n\tLine: {}", m_currentTagLevel, line));
+
+            uint32_t jumpCount = level - m_currentTagLevel - 1;
 
             for(int i = 1; i <= jumpCount; ++i) {
                 m_onTagBegin({

@@ -7,6 +7,9 @@
 #include "Parser/Parser.hpp"
 #include <cassert>
 #include <cctype>
+#include <iostream>
+#include <format>
+
 
 namespace OpenGedcom {
     using namespace Internal;
@@ -23,6 +26,8 @@ namespace OpenGedcom {
         Document doc{};
         std::vector<TagNode*> parseStack;
 
+        doc.m_documentSizeEstimate = data.size();
+
         Parser parser{};
 
         parser.BindDocumentBegin([&doc](DocumentInfo info){
@@ -34,7 +39,7 @@ namespace OpenGedcom {
 
             std::string_view value = info.value;
             
-            // Name is special as it is used for fuzzy finding
+            // name is special as it is used for fuzzy finding
             if(info.tag == "NAME") {
                 value = doc.m_names.Store(info.value);
             }
@@ -42,20 +47,26 @@ namespace OpenGedcom {
                 value = doc.m_values.Store(info.value);
             }
 
-
+            // unknown tag, register it
+            if(!doc.m_registry.IsKnown(info.tag)) {
+                doc.m_registry.RegisterTag<CustomTag>(info.tag);
+            }
 
             TagNode node = doc.m_registry.Create(info.tag);
             uint32_t xref = UINT32_MAX;
+            XrefType xrefType; 
 
             // compute xref
             if(!info.xref.empty()) {
                 xref = 0;
+                xrefType.type = info.xref[0];
 
                 for(auto character : info.xref) {
                     if(std::isdigit(static_cast<unsigned char>(character))) {
                         xref = xref * 10 + (character - '0'); // char to int, moving the existing digits up by 1 place each time
                     }
                 }
+                xrefType.xref = xref; 
             }
 
             
@@ -78,6 +89,17 @@ namespace OpenGedcom {
                 parent->AddChild(tagPtr);
             }
 
+            if(xref != UINT32_MAX) {
+                if(doc.m_xrefs.find(xrefType) == doc.m_xrefs.end()) {
+                    doc.m_xrefs[xrefType] = tagPtr;
+                }
+                else {
+                    std::cerr << "[OpenGedcom] Id Collision Found\n";
+                    std::cerr << "\tId: " << xrefType.type << xrefType.xref << '\n' << std::endl;
+                    
+                }
+            }
+
             parseStack.push_back(tagPtr);
         });
 
@@ -89,8 +111,12 @@ namespace OpenGedcom {
 
         });
 
+        parser.BindError([](std::string_view error){
+            std::cerr << error << '\n' << std::endl;
+        });
 
         parser.Parse(data);
+
         return doc;
     }
 
@@ -103,13 +129,13 @@ namespace OpenGedcom {
     }
 
     std::optional<IndiView> Document::GetIndividual(uint32_t id) {
-        for(auto& record : m_records) {
-            if(record.GetId() == id) {
-                return IndiView{this, &record};
-            }
+        auto it = m_xrefs.find(XrefType{.xref = id, .type = 'I'});
+        if(it != m_xrefs.end()) {
+            return IndiView{this, it->second};
         }
-
-        return std::nullopt;
+        else {
+            return std::nullopt;
+        }
     }
 
     std::vector<IndiView> Document::GetIndividuals(std::string_view name) {
@@ -136,5 +162,36 @@ namespace OpenGedcom {
             return TagView{this, &m_records.back()};
         }
 
+    }
+
+    std::string Document::GetGedcomString() {
+        std::string gedcomString;
+        gedcomString.reserve(m_documentSizeEstimate);
+
+        for(auto& record : m_records) {
+            ConvertNodeRecursive(0, gedcomString, record);
+        }
+
+        return gedcomString;
+    }
+
+    void Document::ConvertNodeRecursive(int level, std::string& mutString, const Internal::TagNode& node) {
+        std::string_view typeLiteral = m_registry.GetTypeString(node);
+        std::string xref;
+
+        if(node.GetId() != INVALID_ID) {
+            xref = std::format("@{}{}@ ", m_registry.GetXrefChar(node), node.GetId());
+        }
+
+        if(node.GetData().empty()) {
+            mutString.append(std::format("{} {}{}\n", std::to_string(level), xref, typeLiteral));
+        }
+        else {
+            mutString.append(std::format("{} {}{} {}\n", std::to_string(level), xref, typeLiteral, node.GetData()));
+        }
+
+        for(auto child : node.GetChildren()) {
+            ConvertNodeRecursive(level + 1, mutString, *child);
+        }
     }
 }

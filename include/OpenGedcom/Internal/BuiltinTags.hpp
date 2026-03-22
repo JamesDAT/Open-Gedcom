@@ -145,6 +145,9 @@ namespace OpenGedcom::Internal {
         HusbandTag,
         WifeTag,
         ChildTag,
-        PedigreeTag
+        PedigreeTag,
+
+        /// Custom Tags
+        InvalidTag
     >;
 }

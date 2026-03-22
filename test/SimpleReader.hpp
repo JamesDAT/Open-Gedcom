@@ -20,4 +20,16 @@ public:
 
         return buffer;
     }
+
+    static void WriteStringToFile(const std::string& path, const std::string& content) {
+        std::ofstream outFile(path, std::ios::binary);
+        if (!outFile) {
+            throw std::runtime_error("Failed to open file: " + path);
+        }
+
+        outFile.write(content.data(), content.size());
+        if (!outFile) {
+            throw std::runtime_error("Failed to write to file: " + path);
+        }
+    }
 };
