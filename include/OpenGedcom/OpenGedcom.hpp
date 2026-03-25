@@ -73,6 +73,14 @@ namespace OpenGedcom {
         /// @param[in] User implemented IReader, optional lazyLoad flag, default false.
         /// @return New document with the parsed Gedcom data
         [[nodiscard]] static Document ParseReader(std::shared_ptr<IReader> reader, bool lazyLoad = false);
+
+        /// @brief Create a new document with document info nodes
+        ///
+        /// Creates a new document and automatically adds default nodes to
+        /// describe the document
+        ///
+        /// @return New document with default nodes
+        [[nodiscard]] static Document Generate();
         
         /// @brief Get an individual from their tag id
         /// @param[in] Id of the individual, omitting the type identifier (such as 'I')

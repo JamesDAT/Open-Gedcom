@@ -19,6 +19,9 @@ int main() {
     std::string gedcomString = doc.GetGedcomString();
     SimpleReader::WriteStringToFile("active-test/output.ged", gedcomString);
 
+    OpenGedcom::Document genDoc = OpenGedcom::Document::Generate();
+    SimpleReader::WriteStringToFile("active-test/genOutput.ged", genDoc.GetGedcomString());
+
     std::cin.ignore();
 
     return 0;

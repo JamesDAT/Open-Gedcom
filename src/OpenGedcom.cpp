@@ -3,6 +3,7 @@
 
 #include "OpenGedcom/OpenGedcom.hpp"
 
+#include "OpenGedcom/Tags/Records.hpp"
 #include "OpenGedcom/Views/IndiView.hpp"
 #include "Parser/Parser.hpp"
 #include <cassert>
@@ -117,6 +118,14 @@ namespace OpenGedcom {
 
         parser.Parse(data);
 
+        auto& finalNode = doc.m_records.back();
+        if(doc.m_registry.IsType<TrailerTag>(finalNode)) {
+            doc.m_records.erase(doc.m_records.end() - 1);
+        }
+        else {
+            std::cerr << std::format("[OpenGedcom] File did not end with TRLR tag") << '\n';
+        }
+
         return doc;
     }
 
@@ -124,6 +133,22 @@ namespace OpenGedcom {
         Document doc{};
 
         Parser parser{};
+
+        return doc;
+    }
+
+    Document Document::Generate() {
+        Document doc{};
+        auto head = doc.CreateTag<HeadTag>();
+        auto source = doc.CreateTag<SourceTag>(&head);
+        source.Get()->SetData("OPEN_GEDCOM");
+
+        auto gedc = doc.CreateTag<GedcTag>(&head);
+        auto version = doc.CreateTag<VersionTag>(&gedc);
+        version.Get()->SetData("7.0");
+
+        auto form = doc.CreateTag<FormatTag>(&gedc);
+        form.Get()->SetData("LINEAGE-LINKED");
 
         return doc;
     }
@@ -171,6 +196,8 @@ namespace OpenGedcom {
         for(auto& record : m_records) {
             ConvertNodeRecursive(0, gedcomString, record);
         }
+
+        gedcomString.append("0 TRLR\n");
 
         return gedcomString;
     }

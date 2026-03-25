@@ -53,7 +53,7 @@ namespace OpenGedcom::Internal {
             lineStart = end + 1;
         }
 
-        // handle final line
+        // handle final line if line doesn't end with \n
         if(lineStart < data.size()) {
             ParseLine(std::string_view(data.data() + lineStart,
                                             data.size() - lineStart));
